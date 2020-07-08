@@ -1,21 +1,18 @@
 <template>
-  <div class="container">
-    <div>
-      <Logo />
-      <h1 class="title">
-        RADHY
-      </h1>
-      <div class="links">
-        <nuxt-link to="dashboard" class="button--green">
-          {{ $t('go_to_dashboard') }}
-        </nuxt-link>
-      </div>
-    </div>
+  <div>
+    <Header />
+    <Partners />
   </div>
 </template>
 
 <script>
+import Partners from '../components/Partners'
+import Header from '../components/Header'
 export default {
+  components: {
+    Partners,
+    Header,
+  },
   head() {
     return {
       title: this.$t('head.home'),
@@ -32,7 +29,7 @@ export default {
 <style>
 .container {
   margin: 0 auto;
-  min-height: 90vh;
+  min-height: 60vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -55,9 +52,5 @@ export default {
   color: #526488;
   word-spacing: 5px;
   padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
 }
 </style>

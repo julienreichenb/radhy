@@ -1,31 +1,20 @@
 <template>
   <div>
-    <b-navbar type="dark" variant="dark">
-      <b-navbar-brand href="/">{{ $t('appname') }}</b-navbar-brand>
-      <b-navbar-nav>
-        <b-nav-item-dropdown :text="this.$t('navbar.lang.title')">
-          <b-dropdown-item :to="switchLocalePath('fr')"
-            ><img src="../static/france.png" class="lang-icon" />
-            {{ $t('navbar.lang.fr') }}</b-dropdown-item
-          >
-          <b-dropdown-item :to="switchLocalePath('en')"
-            ><img src="../static/united.png" class="lang-icon" />
-            {{ $t('navbar.lang.en') }}</b-dropdown-item
-          >
-        </b-nav-item-dropdown>
-      </b-navbar-nav>
-    </b-navbar>
-    <Nuxt />
+    <Navbar />
+    <no-ssr>
+      <Nuxt />
+    </no-ssr>
     <Footer />
   </div>
 </template>
 <script>
 import Footer from '../components/Footer.vue'
+import Navbar from '../components/Navbar.vue'
 export default {
-  components: { Footer },
+  components: { Footer, Navbar },
 }
 </script>
-<style>
+<style lang="scss">
 html {
   font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
     Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -77,5 +66,54 @@ html {
 .lang-icon {
   width: 25px;
   height: auto;
+}
+
+nav.navbar {
+  border-bottom: 1px solid $basecolor !important;
+}
+
+.bg-primary {
+  background-color: $basecolor !important;
+}
+
+.bg-dark {
+  background-color: $basecolor-dark !important;
+}
+
+.text-primary {
+  color: $basecolor !important;
+}
+
+button.btn-outline-primary {
+  border-color: $basecolor;
+  color: $basecolor;
+}
+
+button.btn-outline-primary:hover {
+  border-color: $basecolor;
+  background-color: $basecolor;
+}
+
+button.btn-outline-primary:active {
+  background-color: $basecolor !important;
+}
+
+button.btn-primary {
+  border-color: $basecolor;
+  background-color: $basecolor;
+}
+
+button.btn-primary:hover {
+  border-color: $basecolor;
+  background-color: $basecolor-dark;
+}
+
+button.btn-primary:active {
+  background-color: $basecolor !important;
+}
+
+button.btn-light {
+  color: $basecolor !important;
+  border-color: $basecolor !important;
 }
 </style>

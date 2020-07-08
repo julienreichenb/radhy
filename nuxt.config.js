@@ -30,6 +30,10 @@ export default {
    ** Global CSS
    */
   css: ['@fortawesome/fontawesome-svg-core/styles.css'],
+
+  styleResources: {
+    scss: ['assets/_variables.scss'],
+  },
   /*
    ** Plugins to load before mounting the App
    ** https://nuxtjs.org/guide/plugins
@@ -56,6 +60,7 @@ export default {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     'nuxt-i18n',
+    '@nuxtjs/style-resources',
   ],
   /* i18n config */
   i18n: {
