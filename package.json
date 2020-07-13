@@ -24,11 +24,17 @@
     "@nuxtjs/style-resources": "^1.0.0",
     "bootstrap": "^4.5.0",
     "bootstrap-vue": "^2.15.0",
+    "globally": "0.0.0",
+    "moment": "^2.27.0",
+    "mysql2": "^2.1.0",
     "node-sass": "^4.14.1",
     "nuxt": "^2.13.0",
     "nuxt-fontawesome": "^0.4.0",
     "nuxt-i18n": "^6.13.1",
+    "pg": "^8.3.0",
     "sass-loader": "^9.0.1",
+    "sequelize": "^6.3.1",
+    "sequelize-cli": "^6.2.0",
     "vue-google-charts": "^0.3.3"
   },
   "devDependencies": {
