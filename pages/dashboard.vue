@@ -1,159 +1,57 @@
 <template>
   <div id="dashboard">
     <div id="map">
-      <no-ssr>
-        <l-map :zoom="13" :center="[47.41322, -1.219482]">
-          <l-tile-layer
-            url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-          ></l-tile-layer>
-          <l-marker :lat-lng="[47.41322, -1.219482]"></l-marker>
+      <client-only>
+        <l-map v-if="geoJsons" :zoom="13" :center="center">
+          <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
+          <l-geo-json
+            v-for="geoJson in geoJsons"
+            :key="geoJson.row.id + geoJson.row.time_id"
+            :geojson="geoJson.row"
+            :options="{}"
+          ></l-geo-json>
         </l-map>
-      </no-ssr>
+      </client-only>
     </div>
   </div>
 </template>
 <script>
+import axios from 'axios'
 export default {
   data() {
     return {
-      map: null,
-      tileLayer: null,
-      geoJson: [
-        {
-          id: 15311,
-          type: 'Feature',
-          geometry: {
-            type: 'MultiPolygon',
-            crs: {
-              type: 'name',
-              properties: {
-                name: 'EPSG:2154',
-              },
-            },
-            coordinates: [
-              [
-                [
-                  [909687.5, 6387699.88],
-                  [909661.996600001, 6387695.94],
-                  [909624.171000001, 6387701.73],
-                  [909606.541, 6387709.51],
-                  [909581.226394431, 6387737.5],
-                  [909587.5, 6387737.5],
-                  [909587.5, 6387762.5],
-                  [909637.5, 6387762.5],
-                  [909637.500000001, 6387737.5],
-                  [909687.500000001, 6387737.5],
-                  [909687.5, 6387699.88],
-                ],
-              ],
-              [
-                [
-                  [909287.500000001, 6387857.66],
-                  [909229.204, 6387874.28],
-                  [909171.743000001, 6387954.06],
-                  [908992.356000001, 6387912.87],
-                  [908927.625, 6387925.54],
-                  [908880.899, 6387930.07],
-                  [908804.439, 6387962.5],
-                  [908775.111500001, 6387962.64],
-                  [908744.949000001, 6387979.57],
-                  [908732.7781, 6388003.38],
-                  [908724.000232381, 6388012.5],
-                  [908737.500000001, 6388012.5],
-                  [908737.5, 6388043.03],
-                  [908750.2407, 6388055.77],
-                  [908751.922640941, 6388062.5],
-                  [908762.5, 6388062.5],
-                  [908762.500000001, 6388087.5],
-                  [908787.500000001, 6388087.5],
-                  [908787.500000001, 6388091.97],
-                  [908800.511600001, 6388084.88],
-                  [908818.503300001, 6388069],
-                  [908842.845000001, 6388044.13],
-                  [908880.945100001, 6388043.07],
-                  [908915.341000001, 6388034.61],
-                  [908932.803500001, 6388027.73],
-                  [908984.132800011, 6388031.96],
-                  [908997.891100001, 6388036.19],
-                  [909007.416200001, 6388046.78],
-                  [909009.0037, 6388075.88],
-                  [909007.945300011, 6388096.52],
-                  [909009.003700001, 6388115.57],
-                  [909008.474500001, 6388128.8],
-                  [909014.295300001, 6388140.44],
-                  [909025.937000001, 6388167.43],
-                  [909024.3495, 6388211.88],
-                  [909017.4704, 6388233.57],
-                  [909024.72300001, 6388278.58],
-                  [908996.331295401, 6388312.5],
-                  [909087.500000001, 6388312.5],
-                  [909087.500000001, 6388287.5],
-                  [909112.500000001, 6388287.5],
-                  [909112.500000001, 6388312.5],
-                  [909137.500000001, 6388312.5],
-                  [909137.500000001, 6388262.5],
-                  [909162.5, 6388262.5],
-                  [909162.5, 6388212.5],
-                  [909212.500000001, 6388212.5],
-                  [909212.500000001, 6388112.5],
-                  [909237.5, 6388112.5],
-                  [909237.5, 6388012.5],
-                  [909262.5, 6388012.5],
-                  [909262.5, 6387937.5],
-                  [909287.500000001, 6387937.5],
-                  [909287.500000001, 6387857.66],
-                ],
-              ],
-              [
-                [
-                  [908987.5, 6388322.57],
-                  [908971.887603961, 6388337.5],
-                  [908987.500000001, 6388337.5],
-                  [908987.5, 6388322.57],
-                ],
-              ],
-            ],
-          },
-          properties: {
-            id: 1,
-            rain: 25932.338,
-            snow: 0,
-            stored: 17940804.0,
-            time_id: 13129,
-          },
-        },
-      ],
+      url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+      attribution:
+        '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+      center: [44.556817134, 5.640635221],
+      geoJsons: null,
     }
   },
-  mounted() {
-    this.initMap()
-    this.initLayers()
+  async created() {
+    await this.getShapes(13129)
+    // await this.getOneShape(1)
   },
   methods: {
-    initMap() {
-      this.map = this.$L.map('map').setView([44.4626204, 5.5031107], 12)
-      this.tileLayer = this.$L.tileLayer(
-        'https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}.png',
-        {
-          maxZoom: 18,
-          attribution:
-            '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>',
-        }
-      )
-      this.tileLayer.addTo(this.map)
-    },
-    initLayers() {
-      this.$L
-        .geoJSON(this.geoJson, {
-          style(feature) {
-            if (feature.properties.snow === 0) {
-              return { color: '#ff0000' }
-            } else {
-              return { color: '#00ff00' }
-            }
-          },
+    async getShapes(time) {
+      await axios
+        .get(`http://127.0.0.1:3333/api/hru/time/${time}`)
+        .then((res) => {
+          console.log(res.data)
+          this.geoJsons = res.data
         })
-        .addTo(this.map)
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    async getOneShape(id) {
+      await axios
+        .get(`http://127.0.0.1:3333/api/hru/id/${id}`)
+        .then((res) => {
+          this.geoJsons = [res.data]
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
   },
   head() {
@@ -168,7 +66,7 @@ export default {
   },
 }
 </script>
-<style>
+<style lang="scss">
 #dashboard {
   height: 90vh;
 }

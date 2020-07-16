@@ -1,9 +1,9 @@
 <template>
   <div>
     <Navbar />
-    <no-ssr>
+    <client-only>
       <Nuxt />
-    </no-ssr>
+    </client-only>
     <Footer />
   </div>
 </template>

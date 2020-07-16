@@ -8,15 +8,15 @@ class ReachController {
     const reach = await DB.raw(
       `SELECT json_build_object(
         'id', gr.id,
+        'time_id', time_id,
         'type', 'Feature',
         'geometry', ST_AsGeoJSON(gr.geom)::json,
         'properties', json_build_object(
           'id', r.id,
           'runoff', runoff,
-          'stored', stored,
-          'time_id', time_id
+          'stored', stored
         )
-      )
+      ) AS row
       FROM reaches r INNER JOIN gis_reaches gr ON r.gis_reach_id = gr.id
       WHERE r.id = ?`,
       [params.id]
@@ -28,15 +28,15 @@ class ReachController {
     const reach = await DB.raw(
       `SELECT json_build_object(
         'id', gr.id,
+        'time_id', time_id,
         'type', 'Feature',
         'geometry', ST_AsGeoJSON(gr.geom)::json,
         'properties', json_build_object(
           'id', r.id,
           'runoff', runoff,
-          'stored', stored,
-          'time_id', time_id
+          'stored', stored
         )
-      )
+      ) AS row
       FROM reaches r INNER JOIN gis_reaches gr ON r.gis_reach_id = gr.id
       WHERE time_id = ?`,
       [params.idTime]
@@ -47,16 +47,16 @@ class ReachController {
   async all() {
     const reaches = await DB.raw(
       `SELECT json_build_object(
-        'id', 'gr.id',
+        'id', gr.id,
+        'time_id', time_id,
         'type', 'Feature',
         'geometry', ST_AsGeoJSON(gr.geom)::json,
         'properties', json_build_object(
           'id', r.id,
           'runoff', runoff,
-          'stored', stored,
-          'time_id', time_id
+          'stored', stored
         )
-      )
+      ) AS row
       FROM reaches r INNER JOIN gis_reaches gr ON r.gis_reach_id = gr.id`
     )
     return reaches.rows
