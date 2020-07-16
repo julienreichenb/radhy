@@ -61,6 +61,7 @@ export default {
     '@nuxtjs/axios',
     'nuxt-i18n',
     '@nuxtjs/style-resources',
+    'nuxt-leaflet',
   ],
   /* i18n config */
   i18n: {

@@ -20,33 +20,33 @@ Route.on('/').render('welcome')
 
 /** Time Routes */
 Route.group(() => {
-  Route.get('time/id/:id', 'TimeController.byId')
-  Route.get('time/date/:year/:month/:day/:hour', 'TimeController.byDate')
-  Route.get('time/all', 'TimeController.all')
-}).prefix('api')
+  Route.get('id/:id', 'TimeController.byId')
+  Route.get('date/:year/:month/:day/:hour', 'TimeController.byDate')
+  Route.get('all', 'TimeController.all')
+}).prefix('api/time')
 
 /** Hru Routes */
 Route.group(() => {
-  Route.get('hru/id/:id', 'HruController.byId')
-  Route.get('hru/cat/:cat', 'HruController.byCat')
-  Route.get('hru/time/:idTime', 'HruController.byDate')
-  Route.get('hru/all', 'HruController.all')
-}).prefix('api')
+  Route.get('id/:id', 'HruController.byId')
+  Route.get('time/:idTime', 'HruController.byDate')
+  Route.get('all', 'HruController.all')
+}).prefix('api/hru')
 
 /** Reach Routes */
 Route.group(() => {
-  Route.get('reach/id/:id', 'ReachController.byId')
-  Route.get('reach/cat/:cat', 'ReachController.byCat')
-  Route.get('reach/time/:idTime', 'ReachController.byDate')
-  Route.get('reach/all', 'ReachController.all')
-}).prefix('api')
+  Route.get('id/:id', 'ReachController.byId')
+  Route.get('time/:idTime', 'ReachController.byDate')
+  Route.get('all', 'ReachController.all')
+}).prefix('api/reach')
 
 /** GisHru Routes */
 Route.group(() => {
-  Route.get('gishru/id/:id', 'GisHruController.byId')
-}).prefix('api')
+  Route.get('id/:id', 'GisHruController.byId')
+  Route.get('all', 'GisHruController.all')
+}).prefix('api/gishru')
 
 /** GisReach Routes */
 Route.group(() => {
-  Route.get('gisreach/id/:id', 'GisReachController.byId')
-}).prefix('api')
+  Route.get('id/:id', 'GisReachController.byId')
+  Route.get('all', 'GisReachController.all')
+}).prefix('api/gisreach')

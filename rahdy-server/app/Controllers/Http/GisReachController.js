@@ -8,6 +8,11 @@ class GisReachController {
     await gisReach.load('reachs')
     return gisReach.toJSON()
   }
+
+  async all() {
+    const gisReach = await GisReach.query().with('hrus').fetch()
+    return gisReach.toJSON()
+  }
 }
 
 module.exports = GisReachController
