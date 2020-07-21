@@ -7,7 +7,7 @@ class ReachController {
   async byId({ params }) {
     const reach = await DB.raw(
       `SELECT json_build_object(
-        'id', gr.id,
+        'id', gr.ogc_fid,
         'time_id', time_id,
         'type', 'Feature',
         'geometry', ST_AsGeoJSON(gr.geom)::json,
@@ -27,7 +27,7 @@ class ReachController {
   async byDate({ params }) {
     const reach = await DB.raw(
       `SELECT json_build_object(
-        'id', gr.id,
+        'id', gr.ogc_fid,
         'time_id', time_id,
         'type', 'Feature',
         'geometry', ST_AsGeoJSON(gr.geom)::json,
@@ -41,13 +41,13 @@ class ReachController {
       WHERE time_id = ?`,
       [params.idTime]
     )
-    return reach.rows[0]
+    return reach.rows
   }
 
   async all() {
     const reaches = await DB.raw(
       `SELECT json_build_object(
-        'id', gr.id,
+        'id', gr.ogc_fid,
         'time_id', time_id,
         'type', 'Feature',
         'geometry', ST_AsGeoJSON(gr.geom)::json,

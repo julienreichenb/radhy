@@ -8,7 +8,7 @@
         class="ml-1 mr-1 mt-4 my-auto"
       >
         <a :href="$t('partners.' + partner + '.url')">
-          <img :src="getImgUrl(partner)" width="70%" v-bind:alt="partner" />
+          <img :src="getImgUrl(partner)" width="80%" v-bind:alt="partner" />
         </a>
       </b-col>
     </b-row>
@@ -34,6 +34,6 @@ export default {
   bottom: 0;
   left: 0;
   margin-bottom: 2em;
-  padding: 0 15em;
+  padding: 0 50px;
 }
 </style>

@@ -6,6 +6,7 @@ export default {
     'Hydrologic Dynamics on the\n' +
     'Büech Basin',
   footer: 'RADHY Büech © ',
+  loading: 'Loading map data...',
   head: {
     home: 'Welcome',
     dashboard: 'Dashboard',
@@ -45,6 +46,36 @@ export default {
   },
   go_to_dashboard: 'Go to Dashboard',
   go_to_about: 'More about RADHY',
+  dashboard: {
+    hru: {
+      title: 'Areas',
+      text: 'HRU',
+      rain: {
+        title: 'Rain, in liters',
+      },
+      snow: {
+        title: 'Snow, in liters',
+      },
+      stored: {
+        title: 'Stored water inside the soil, in liters',
+      },
+    },
+    reach: {
+      title: 'Reaches',
+      text: 'REACH',
+      runoff: {
+        title: 'Water runoff, in liters',
+      },
+      stored: {
+        title: 'Stagnant water, in liters',
+      },
+    },
+    map: {
+      modal: {
+        title: 'Map markers meaning',
+      },
+    },
+  },
   about: {
     overview: {
       header: 'Project Overview',

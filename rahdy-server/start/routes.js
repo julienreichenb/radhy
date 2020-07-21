@@ -23,6 +23,7 @@ Route.group(() => {
   Route.get('id/:id', 'TimeController.byId')
   Route.get('date/:year/:month/:day/:hour', 'TimeController.byDate')
   Route.get('all', 'TimeController.all')
+  Route.get('daterange/:min/:max', 'TimeController.range')
 }).prefix('api/time')
 
 /** Hru Routes */
@@ -30,6 +31,7 @@ Route.group(() => {
   Route.get('id/:id', 'HruController.byId')
   Route.get('time/:idTime', 'HruController.byDate')
   Route.get('all', 'HruController.all')
+  Route.get('daterange', 'HruController.availableRange')
 }).prefix('api/hru')
 
 /** Reach Routes */

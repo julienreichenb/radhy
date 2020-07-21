@@ -1,6 +1,6 @@
 'use strict'
 
-// const Hru = use('App/Models/Hru')
+const Hru = use('App/Models/Hru')
 const DB = use('Database')
 
 class HruController {
@@ -44,6 +44,12 @@ class HruController {
       [params.idTime]
     )
     return hru.rows
+  }
+
+  async availableRange() {
+    const max = await Hru.getMax('time_id')
+    const min = await Hru.getMin('time_id')
+    return [min, max]
   }
 
   async all() {

@@ -23,6 +23,7 @@ export default {
   width: 100%;
   color: white;
   text-align: right;
+  z-index: 10000000;
 }
 .footer-text {
   padding: 0.5em;
