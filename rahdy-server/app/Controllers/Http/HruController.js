@@ -4,6 +4,12 @@ const Hru = use('App/Models/Hru')
 const DB = use('Database')
 
 class HruController {
+  async availableRange() {
+    const max = await Hru.getMax('time_id')
+    const min = await Hru.getMin('time_id')
+    return [min, max]
+  }
+
   async byId({ params }) {
     const hru = await DB.raw(
       `SELECT json_build_object(
@@ -25,7 +31,7 @@ class HruController {
     return hru.rows[0]
   }
 
-  async byDate({ params }) {
+  async geoByDate({ params }) {
     const hru = await DB.raw(
       `SELECT json_build_object(
         'id', gh.id,
@@ -46,10 +52,16 @@ class HruController {
     return hru.rows
   }
 
-  async availableRange() {
-    const max = await Hru.getMax('time_id')
-    const min = await Hru.getMin('time_id')
-    return [min, max]
+  async overall({ params }) {
+    const hru = await DB.table('hrus')
+      .select('time_id')
+      .whereBetween('time_id', [params.start, params.end])
+      .sum('rain as rain')
+      .sum('snow as snow')
+      .sum('stored as stored')
+      .groupBy('time_id')
+      .orderBy('time_id')
+    return hru
   }
 
   async all() {

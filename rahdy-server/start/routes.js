@@ -29,7 +29,8 @@ Route.group(() => {
 /** Hru Routes */
 Route.group(() => {
   Route.get('id/:id', 'HruController.byId')
-  Route.get('time/:idTime', 'HruController.byDate')
+  Route.get('geotime/:idTime', 'HruController.geoByDate')
+  Route.get('overall/:start/:end', 'HruController.overall')
   Route.get('all', 'HruController.all')
   Route.get('daterange', 'HruController.availableRange')
 }).prefix('api/hru')
@@ -37,7 +38,8 @@ Route.group(() => {
 /** Reach Routes */
 Route.group(() => {
   Route.get('id/:id', 'ReachController.byId')
-  Route.get('time/:idTime', 'ReachController.byDate')
+  Route.get('geotime/:idTime', 'ReachController.geoByDate')
+  Route.get('overall/:start/:end', 'ReachController.overall')
   Route.get('all', 'ReachController.all')
 }).prefix('api/reach')
 

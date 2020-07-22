@@ -52,8 +52,10 @@ export default {
   go_to_about: "Plus d'infos sur RADHY",
   dashboard: {
     hru: {
-      title: 'Zones',
-      text: 'HRU',
+      title: 'Découpage du bassin versant en zones',
+      text:
+        `Le bassin du Buëch est découpé en zones. Diverses mesures hydrologiques et topologiques sont prises chaque heure : précipitations, composition du sol, quantité d'eau en sous-sol, ...` +
+        `Les parcelles agricoles y sont également répertoriées mais ne sont pour le moment pas représentées sur les graphiques et la carte.`,
       rain: {
         title: 'Précipitations, en litres',
       },
@@ -66,13 +68,20 @@ export default {
     },
     reach: {
       title: "Cours d'eau",
-      text: 'REACH',
+      text: `Les cours d'eau du bassin sont découpés en tronçons, dont le débit et la quantité d'eau stagnante sont également mesurés chaque heure.`,
       runoff: {
         title: 'Eau écoulée, en litres',
       },
       stored: {
         title: 'Eau stagnante, en litres',
       },
+    },
+    chart: {
+      day: 'Date',
+      rain: 'Pluie (L)',
+      stored: 'Nappes phréatiques (L)',
+      runoff: 'Eau écoulée (L)',
+      storedr: 'Eau stagnante (L)',
     },
     map: {
       modal: {
@@ -89,18 +98,15 @@ export default {
   about: {
     overview: {
       header: "Vue d'ensemble du projet",
-      content:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin consequat blandit ex, ut eleifend neque sodales at. Morbi odio quam, condimentum ut ligula at, aliquam molestie mi. Vivamus ultricies mollis commodo. Duis sollicitudin, mauris in imperdiet feugiat, tellus erat cursus leo, et dapibus arcu odio quis nulla. Nulla consectetur iaculis varius. Nunc velit nunc, finibus nec nulla sed, dictum luctus nisi. Donec augue lectus, vulputate nec faucibus eu, semper id ipsum. Quisque eu sapien egestas, tempus justo et, elementum neque. Sed sit amet ligula ac ipsum congue sagittis. Vivamus tempus egestas ipsum in luctus. Duis hendrerit luctus neque non sagittis. Pellentesque ut viverra tellus. Curabitur consequat justo quis dui tempus pretium.',
+      content: `À l’heure où les changements climatiques en cours induisent des épisodes de sécheresse plus fréquents et plus intenses, la société doit développer sa capacité de résilience et mettre en place des stratégies d’adaptation, notamment dans la gestion de l’eau. Le bassin du Buëch fait ainsi partie des territoires où la tension sur la ressource en eau peut s’avérer importante à certaines périodes de l’année, et nécessiter une adaptation de tous ses usagers. La recherche propose de contribuer à la réflexion sur les futurs possibles et souhaités du bassin du Buëch pour la gestion de l’eau, par une vision co-construite entre chercheurs et acteurs du territoire. Elle prolonge ainsi les réflexions menées dans le Plan de gestion de la ressource en eau (PGRE, SMIGIBA 2019), en adoptant une vision prospective et territorialisée.`,
     },
     modeling: {
       header: 'Collecte des données et simulations',
-      content:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin consequat blandit ex, ut eleifend neque sodales at. Morbi odio quam, condimentum ut ligula at, aliquam molestie mi. Vivamus ultricies mollis commodo. Duis sollicitudin, mauris in imperdiet feugiat, tellus erat cursus leo, et dapibus arcu odio quis nulla. Nulla consectetur iaculis varius. Nunc velit nunc, finibus nec nulla sed, dictum luctus nisi. Donec augue lectus, vulputate nec faucibus eu, semper id ipsum. Quisque eu sapien egestas, tempus justo et, elementum neque. Sed sit amet ligula ac ipsum congue sagittis. Vivamus tempus egestas ipsum in luctus. Duis hendrerit luctus neque non sagittis. Pellentesque ut viverra tellus. Curabitur consequat justo quis dui tempus pretium.',
+      content: `La modélisation du système EAU peut permettre de simuler des scénarios d’actions dans diverses situations hydrologiques, contribuant à aider la réflexion sur le partage de l’eau en période de tension sur la ressource. La prise en compte de la vision actuelle et future des acteurs économiques, politiques et des habitants du Buëch de leur territoire face à la problématique de l’eau est l’une des entrées clés de la mise en place de scénarios d’adaptations locales au risque de sécheresse.`,
     },
     visualisations: {
       header: 'Visualisations des données',
-      content:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin consequat blandit ex, ut eleifend neque sodales at. Morbi odio quam, condimentum ut ligula at, aliquam molestie mi. Vivamus ultricies mollis commodo. Duis sollicitudin, mauris in imperdiet feugiat, tellus erat cursus leo, et dapibus arcu odio quis nulla. Nulla consectetur iaculis varius. Nunc velit nunc, finibus nec nulla sed, dictum luctus nisi. Donec augue lectus, vulputate nec faucibus eu, semper id ipsum. Quisque eu sapien egestas, tempus justo et, elementum neque. Sed sit amet ligula ac ipsum congue sagittis. Vivamus tempus egestas ipsum in luctus. Duis hendrerit luctus neque non sagittis. Pellentesque ut viverra tellus. Curabitur consequat justo quis dui tempus pretium.',
+      content: `Pour permettre une interprétation correcte des données et aider les différents acteurs à prendre des décisions en toute connaissance de cause, les diverses mesures et simulations doivent pouvoir être visualisées. Au travers de cartes et de graphiques interactifs, l'état actuel et les scénarios futurs de la gestion de l'eau peuvent être interprétés et donner lieu à des décisions concrètes.`,
     },
     thanks: {
       header: 'Remerciements',

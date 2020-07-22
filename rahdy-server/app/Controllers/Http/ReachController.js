@@ -1,6 +1,6 @@
 'use strict'
 
-// const Reach = use('App/Models/Reach')
+const Reach = use('App/Models/Reach')
 const DB = use('Database')
 
 class ReachController {
@@ -24,7 +24,7 @@ class ReachController {
     return reach.rows[0]
   }
 
-  async byDate({ params }) {
+  async geoByDate({ params }) {
     const reach = await DB.raw(
       `SELECT json_build_object(
         'id', gr.ogc_fid,
@@ -42,6 +42,17 @@ class ReachController {
       [params.idTime]
     )
     return reach.rows
+  }
+
+  async overall({ params }) {
+    const reach = await DB.table('reaches')
+      .select('time_id')
+      .whereBetween('time_id', [params.start, params.end])
+      .sum('runoff as snow')
+      .sum('stored as stored')
+      .groupBy('time_id')
+      .orderBy('time_id')
+    return reach
   }
 
   async all() {

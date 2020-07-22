@@ -46,27 +46,7 @@
               class="pt-2"
             >
               <div v-if="chart.display">
-                <div class="text-center">
-                  <font-awesome-layers class="fa-2x mr-2">
-                    <font-awesome-icon
-                      icon="circle"
-                      :style="{ color: chart.color }"
-                    />
-                    <font-awesome-icon
-                      icon="circle"
-                      transform="shrink-1"
-                      class="text-white"
-                    />
-                    <font-awesome-icon
-                      :icon="chart.icon"
-                      transform="shrink-7"
-                      :style="{ color: chart.color }"
-                    />
-                  </font-awesome-layers>
-                  <span>{{ getText(card.key + '.' + chart.key, true) }}</span>
-                </div>
                 <GChart
-                  class="border-bottom pb-4"
                   :type="chart.type"
                   :data="chart.data"
                   :options="chart.options"
@@ -112,26 +92,8 @@ export default {
               display: false,
               icon: 'cloud-showers-heavy',
               color: '#668dcc',
-              key: 'rain',
-              type: '',
-              data: [],
-              options: {},
-            },
-            {
-              display: false,
-              icon: 'snowflake',
-              color: '#777777',
-              key: 'snow',
-              type: '',
-              data: [],
-              options: {},
-            },
-            {
-              display: false,
-              icon: 'fill-drip',
-              color: '#7a5b3b',
-              key: 'stored',
-              type: '',
+              key: 'overall',
+              type: 'LineChart',
               data: [],
               options: {},
             },
@@ -146,17 +108,8 @@ export default {
               display: false,
               icon: 'random',
               color: '#668dcc',
-              key: 'runoff',
-              type: '',
-              data: [],
-              options: {},
-            },
-            {
-              display: false,
-              icon: 'fill-drip',
-              color: '#171b54',
-              key: 'stored',
-              type: '',
+              key: 'overall',
+              type: 'LineChart',
               data: [],
               options: {},
             },
@@ -167,8 +120,8 @@ export default {
   },
   async created() {
     await this.getAvailableTimeRange()
-    await this.getShapes(this.timeRange[0].id)
-    // this.getOverall(this.timeRange[0].id)
+    this.getShapes(this.timeRange[0].id)
+    this.getOverall(this.timeRange[0].id)
   },
   methods: {
     async getShapes(time) {
@@ -181,7 +134,7 @@ export default {
     },
     async getHrus(time) {
       await axios
-        .get(`http://127.0.0.1:3333/api/hru/time/${time}`)
+        .get(`http://127.0.0.1:3333/api/hru/geotime/${time}`)
         .then((res) => {
           const storedArr = []
           res.data.forEach((line) => {
@@ -250,7 +203,7 @@ export default {
     },
     async getReaches(time) {
       await axios
-        .get(`http://127.0.0.1:3333/api/reach/time/${time}`)
+        .get(`http://127.0.0.1:3333/api/reach/geotime/${time}`)
         .then((res) => {
           this.geoJsons.reach = []
           const storedArr = []
@@ -263,7 +216,6 @@ export default {
           })
           this.storedReachValues = this.getValues(storedArr)
           this.runoffValues = this.getValues(runoffArr)
-          console.log(res.data)
           res.data.forEach((line) => {
             this.geoJsons.reach.push({
               key: 'r-' + line.row.id,
@@ -291,23 +243,38 @@ export default {
         })
     },
     async getOverall(time) {
-      await this.cards.forEach((card) => {
-        card.charts.forEach((chart) => {
-          chart.data.push(
-            ['Year', 'Sales', 'Expenses'],
-            ['2004', 1000, 400],
-            ['2005', 1170, 460],
-            ['2006', 660, 1120],
-            ['2007', 1030, 540]
-          )
-          chart.type = 'LineChart'
-          chart.options = {
-            title: 'Company Performance',
-            curveType: 'function',
-            legend: { position: 'bottom' },
-          }
+      this.hideCharts()
+      const hruOverallQuery = axios.get(
+        `http://127.0.0.1:3333/api/hru/overall/${this.timeRange[0].id}/${
+          this.timeRange[this.timeRange.length - 1].id
+        }`
+      )
+      const reachOverallQuery = axios.get(
+        `http://127.0.0.1:3333/api/reach/overall/${this.timeRange[0].id}/${
+          this.timeRange[this.timeRange.length - 1].id
+        }`
+      )
+      await axios
+        .all([hruOverallQuery, reachOverallQuery])
+        .then(
+          axios.spread(async (...responses) => {
+            await this.setupHeaderCharts()
+            responses[0].data.forEach((hru) => {
+              hru.rain += hru.snow
+              delete hru.snow
+              hru.time_id = this.getDayLabel(hru.time_id)
+              this.cards[0].charts[0].data.push(Object.values(hru))
+            })
+            responses[1].data.forEach((reach) => {
+              reach.time_id = this.getDayLabel(reach.time_id)
+              this.cards[1].charts[0].data.push(Object.values(reach))
+            })
+            this.showCharts()
+          })
+        )
+        .catch((err) => {
+          console.log(err)
         })
-      })
     },
     async getAvailableTimeRange() {
       await axios
@@ -317,8 +284,8 @@ export default {
             .get(
               `http://127.0.0.1:3333/api/time/daterange/${resHru.data[0]}/${resHru.data[1]}`
             )
-            .then((resTime) => {
-              this.timeRange = resTime.data
+            .then((res) => {
+              this.timeRange = res.data
             })
             .catch((err) => {
               console.log(err)
@@ -369,6 +336,10 @@ export default {
       })
       return ticks
     },
+    getDayLabel(id) {
+      const fullTime = this.timeRange.filter((t) => t.id === id)[0]
+      return fullTime.day + '-' + fullTime.month + '-' + fullTime.year
+    },
     getTimeLabels() {
       const labels = []
       this.timeRange.forEach((date) => {
@@ -377,8 +348,51 @@ export default {
       })
       return labels
     },
+    setupHeaderCharts() {
+      this.cards[0].charts[0].data = [
+        [
+          this.$t('dashboard.chart.day'),
+          this.$t('dashboard.chart.rain'),
+          this.$t('dashboard.chart.stored'),
+        ],
+      ]
+      this.cards[1].charts[0].data = [
+        [
+          this.$t('dashboard.chart.day'),
+          this.$t('dashboard.chart.runoff'),
+          this.$t('dashboard.chart.storedr'),
+        ],
+      ]
+      const options = {
+        vAxis: {
+          format: 'short',
+        },
+        legend: { position: 'top' },
+      }
+      this.cards[0].charts[0].options.legend = { position: 'top' }
+      this.cards[0].charts[0].options.vAxis = {
+        format: 'short',
+      }
+      this.cards[0].charts[0].options.series = {
+        0: { targetAxisIndex: 0 },
+        1: { targetAxisIndex: 1 },
+      }
+      this.cards[0].charts[0].options.vAxes = {
+        0: { title: this.$t('dashboard.chart.rain') },
+        1: { title: this.$t('dashboard.chart.stored') },
+      }
+      this.cards[1].charts[0].options = options
+    },
     removeDuplicates(array) {
       return array.filter((a, b) => array.indexOf(a) === b)
+    },
+    showCharts() {
+      this.cards[0].charts[0].display = true
+      this.cards[1].charts[0].display = true
+    },
+    hideCharts() {
+      this.cards[0].charts[0].display = false
+      this.cards[1].charts[0].display = false
     },
   },
   head() {
