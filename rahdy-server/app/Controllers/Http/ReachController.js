@@ -14,7 +14,8 @@ class ReachController {
         'properties', json_build_object(
           'id', r.id,
           'runoff', runoff,
-          'stored', stored
+          'stored', stored,
+          'width', r_width
         )
       ) AS row
       FROM reaches r INNER JOIN gis_reaches gr ON r.gis_reach_id = gr.id
@@ -34,7 +35,8 @@ class ReachController {
         'properties', json_build_object(
           'id', r.id,
           'runoff', runoff,
-          'stored', stored
+          'stored', stored,
+          'width', r_width
         )
       ) AS row
       FROM reaches r INNER JOIN gis_reaches gr ON r.gis_reach_id = gr.id
@@ -65,7 +67,8 @@ class ReachController {
         'properties', json_build_object(
           'id', r.id,
           'runoff', runoff,
-          'stored', stored
+          'stored', stored,
+          'width', r_width
         )
       ) AS row
       FROM reaches r INNER JOIN gis_reaches gr ON r.gis_reach_id = gr.id`

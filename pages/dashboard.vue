@@ -136,106 +136,22 @@ export default {
       await axios
         .get(`http://127.0.0.1:3333/api/hru/geotime/${time}`)
         .then((res) => {
-          const storedArr = []
+          this.geoJsons.hru = []
           res.data.forEach((line) => {
-            storedArr.push(line.row.properties.stored)
+            this.geoJsons.hru.push(line.row)
           })
-          const rainArr = []
-          res.data.forEach((line) => {
-            rainArr.push(line.row.properties.rain)
-          })
-          const snowArr = []
-          res.data.forEach((line) => {
-            snowArr.push(line.row.properties.snow)
-          })
-          this.storedHruValues = this.getValues(storedArr)
-          this.rainValues = this.getValues(rainArr)
-          this.snowValues = this.getValues(snowArr)
-          this.computeHruStoredGeoJsons(res.data)
-          this.computeRainGeoJsons(res.data)
         })
         .catch((err) => {
           console.log(err)
         })
-    },
-    computeRainGeoJsons(arr) {
-      this.geoJsons.rain = []
-      arr = arr.filter((x) => x.row.properties.rain !== 0)
-      arr.forEach((line) => {
-        this.geoJsons.rain.push({
-          key: 'hr-' + line.row.properties.id,
-          option: {
-            style: {
-              color: '#668dcc',
-              weight:
-                this.getScale(line.row.properties.rain, this.rainValues.max) *
-                0.5,
-              opacity: 0.3,
-              fillOpacity: 0,
-            },
-          },
-          row: line.row,
-        })
-      })
-    },
-    computeHruStoredGeoJsons(arr) {
-      this.geoJsons.hruStored = []
-      arr.forEach((line) => {
-        const color =
-          'rgba(23, 27, 84,' +
-          this.getScale(line.row.properties.stored, this.storedHruValues.max) /
-            5 +
-          ')'
-        this.geoJsons.hruStored.push({
-          key: 'hs-' + line.row.properties.id,
-          option: {
-            style: {
-              color,
-              fillColor: color,
-              opacity: 0.8,
-              fillOpacity: 1,
-              weight: 0.5,
-            },
-          },
-          row: line.row,
-        })
-      })
     },
     async getReaches(time) {
       await axios
         .get(`http://127.0.0.1:3333/api/reach/geotime/${time}`)
         .then((res) => {
           this.geoJsons.reach = []
-          const storedArr = []
           res.data.forEach((line) => {
-            storedArr.push(line.row.properties.stored)
-          })
-          const runoffArr = []
-          res.data.forEach((line) => {
-            runoffArr.push(line.row.properties.runoff)
-          })
-          this.storedReachValues = this.getValues(storedArr)
-          this.runoffValues = this.getValues(runoffArr)
-          res.data.forEach((line) => {
-            this.geoJsons.reach.push({
-              key: 'r-' + line.row.id,
-              option: {
-                style: {
-                  color: `rgba(0, 166, 255, ${(
-                    this.getScale(
-                      line.row.properties.stored,
-                      this.storedReachValues.max
-                    ) / 10
-                  ).toString()})`,
-                  weight: this.getScale(
-                    line.row.properties.runoff,
-                    this.runoffValues.max / 0.05
-                  ),
-                  opacity: 0.8,
-                },
-              },
-              row: line.row,
-            })
+            this.geoJsons.reach.push(line.row)
           })
         })
         .catch((err) => {
@@ -310,24 +226,9 @@ export default {
         ? this.$t('dashboard.' + key + '.title')
         : this.$t('dashboard.' + key + '.text')
     },
-    getScale(line, max) {
-      return (line * 100) / max
-    },
-    getValues(arr) {
-      return {
-        min: Math.min(...arr),
-        max: Math.max(...arr),
-        avg: arr.reduce((prev, curr) => prev + curr) / arr.length,
-      }
-    },
     resetValues() {
       this.loaded = false
       this.geoJsons = {}
-      this.storedHruValues = null
-      this.rainValues = null
-      this.snowValues = null
-      this.storedReachValues = null
-      this.runoffValues = null
     },
     getTimeTicks() {
       const ticks = []
@@ -417,7 +318,7 @@ export default {
   padding: 0em 5em;
 }
 #data {
-  height: 78vh;
+  height: 70vh;
 }
 #charts {
   margin-bottom: 0.3em;
@@ -431,5 +332,12 @@ export default {
 }
 .slider.slider-horizontal {
   width: 100% !important;
+}
+.slider-tick {
+  background-image: linear-gradient(
+    to bottom,
+    $basecolor-light 0%,
+    $basecolor 100%
+  );
 }
 </style>

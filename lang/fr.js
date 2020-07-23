@@ -91,7 +91,23 @@ export default {
           `<p>Les <b>zones</b> marquées en <span class="hru-area">bleu foncé</span> symbolisent l'eau stockées dans le sol : plus la zone est foncée, plus la nappe est conséquente.</p>` +
           `<p>Les <b>cours d'eau</b> sont représentés sur la carte par les <span class="reach-vector">traits bleus</span>.` +
           ` L'intensité de la couleur est influencée par la quantité d'eau stagnante dans le tronçon et la largeur par le débit s'y écoulant.</p>` +
-          `<p>Par ailleurs, vous pouvez naviguer de jour en jour en utilisant la <b>ligne temporelle</b> au sommet de la page.</p>`,
+          `<p>Vous pouvez naviguer de jour en jour en utilisant la <b>ligne temporelle</b> au sommet de la page.</p>`,
+      },
+      tooltip: {
+        stored: 'Nappe phréatique',
+        rain: 'Pluie',
+        snow: 'Neige',
+        runoff: 'Eau écoulée',
+        storedReach: 'Eau stagnante',
+        elevation: 'Altitude',
+        width: 'Largeur',
+        recenter: 'Recentrer la carte',
+      },
+      options: {
+        tooltip: 'Infobulles',
+        stored: 'Sous-sol',
+        rain: 'Précipitations',
+        reach: "Cours d'eau",
       },
     },
   },
@@ -111,7 +127,7 @@ export default {
     thanks: {
       header: 'Remerciements',
       content:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin consequat blandit ex, ut eleifend neque sodales at. Morbi odio quam, condimentum ut ligula at, aliquam molestie mi. Vivamus ultricies mollis commodo. Duis sollicitudin, mauris in imperdiet feugiat, tellus erat cursus leo, et dapibus arcu odio quis nulla. Nulla consectetur iaculis varius. Nunc velit nunc, finibus nec nulla sed, dictum luctus nisi. Donec augue lectus, vulputate nec faucibus eu, semper id ipsum. Quisque eu sapien egestas, tempus justo et, elementum neque. Sed sit amet ligula ac ipsum congue sagittis. Vivamus tempus egestas ipsum in luctus. Duis hendrerit luctus neque non sagittis. Pellentesque ut viverra tellus. Curabitur consequat justo quis dui tempus pretium.',
+        'Julien Reichenbach, <b>HES-SO Valais/Wallis</b> - Développeur de la plateforme',
     },
   },
 }

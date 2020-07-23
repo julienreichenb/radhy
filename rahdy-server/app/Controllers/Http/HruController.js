@@ -21,7 +21,8 @@ class HruController {
           'id', h.id,
           'rain', rain,
           'snow', snow,
-          'stored', stored
+          'stored', stored,
+          'elevation', elevation
         )
       ) AS row
       FROM hrus h INNER JOIN gis_hrus gh ON h.gis_hru_id = gh.id
@@ -42,7 +43,8 @@ class HruController {
           'id', h.id,
           'rain', rain,
           'snow', snow,
-          'stored', stored
+          'stored', stored,
+          'elevation', elevation
         )
       ) AS row
       FROM hrus h INNER JOIN gis_hrus gh ON h.gis_hru_id = gh.id
@@ -75,7 +77,8 @@ class HruController {
           'id', h.id,
           'rain', rain,
           'snow', snow,
-          'stored', stored
+          'stored', stored,
+          'elevation', elevation
         )
       ) AS row
       FROM hrus h INNER JOIN gis_hrus gh ON h.gis_hru_id = gh.id`

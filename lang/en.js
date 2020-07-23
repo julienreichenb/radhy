@@ -23,6 +23,10 @@ export default {
   },
   partners: {
     title: 'Our partners',
+    hes: {
+      url: 'https://www.hevs.ch/fr/',
+      name: '',
+    },
     eaurmc: {
       url: 'https://www.eaurmc.fr/',
       name: '',
@@ -48,8 +52,10 @@ export default {
   go_to_about: 'More about RADHY',
   dashboard: {
     hru: {
-      title: 'Areas',
-      text: 'HRU',
+      title: 'Shaping the Basin in Areas',
+      text:
+        `The Buëch Basin is cut in areas, where multiple hydrological and topological measures are taken hourly : rain, soil composition, underground stored water, ...` +
+        `The agricultural parcels are also indexed but are not displayed yet on the charts or the map.`,
       rain: {
         title: 'Rain, in liters',
       },
@@ -61,8 +67,9 @@ export default {
       },
     },
     reach: {
-      title: 'Reaches',
-      text: 'REACH',
+      title: 'Rivers and Streams',
+      text:
+        'The watercourses are split in sections, the flow and the stagnant water of which are also hourly measured.',
       runoff: {
         title: 'Water runoff, in liters',
       },
@@ -70,9 +77,38 @@ export default {
         title: 'Stagnant water, in liters',
       },
     },
+    chart: {
+      day: 'Date',
+      rain: 'Rain (L)',
+      stored: 'Underground water (L)',
+      runoff: 'Streamed water (L)',
+      storedr: 'Stagnant water (L)',
+    },
     map: {
       modal: {
         title: 'Map markers meaning',
+        text:
+          `<p>The <b>rainfall</b> are described by the <span class="water-circle">blue circles</span>. The wider and more colored the circle, the more import the rainfall.</p>` +
+          `<p>The <b>areas</b> in <span class="hru-area">dark blue</span> symbolize the amount of underground water : the darker the area, the larger the quantity.</p>` +
+          `<p>The <b>watercourses</b> are shown on the map with the <span class="reach-vector">blue lines</span>.` +
+          ` The color intensity is influenced by the amount of stored water in the segment and the width by the stream flow.</p>` +
+          `<p>You can navigate between the days by using the <b>timeline</b> at the top of the page.</p>`,
+      },
+      tooltip: {
+        stored: 'Underground water',
+        rain: 'Rain',
+        snow: 'Snow',
+        runoff: 'Streamed water',
+        storedReach: 'Stagnant water',
+        elevation: 'Elevation',
+        width: 'Width',
+        recenter: 'Recenter the map',
+      },
+      options: {
+        tooltip: 'Tooltips',
+        stored: 'Underground',
+        rain: 'Rainfall',
+        reach: 'Watercourses',
       },
     },
   },

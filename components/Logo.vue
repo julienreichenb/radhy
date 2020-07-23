@@ -1,5 +1,5 @@
 <template>
-  <img src="../static/radhy_logo.png" height="250" />
+  <img src="../static/radhy_logo.png" height="180" />
 </template>
 
 <style>
