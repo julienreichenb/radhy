@@ -67,6 +67,10 @@ export default {
     '@nuxtjs/style-resources',
     'nuxt-leaflet',
   ],
+  /* Env variables */
+  env: {
+    baseUrl: 'localhost:3333/api',
+  },
   /* i18n config */
   i18n: {
     vueI18nLoader: false,

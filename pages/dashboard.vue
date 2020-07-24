@@ -73,9 +73,10 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
+import Axios from 'axios'
 import Loading from '../components/Loading'
 import Map from '../components/Map'
+import axios from '../plugins/axios'
 export default {
   components: {
     Loading,
@@ -168,7 +169,7 @@ export default {
     },
     async getHrus(time) {
       await axios
-        .get(`http://127.0.0.1:3333/api/hru/geotime/${time}`)
+        .get(`hru/geotime/${time}`)
         .then((res) => {
           this.geoJsons.hru = []
           res.data.forEach((line) => {
@@ -181,7 +182,7 @@ export default {
     },
     async getReaches(time) {
       await axios
-        .get(`http://127.0.0.1:3333/api/reach/geotime/${time}`)
+        .get(`reach/geotime/${time}`)
         .then((res) => {
           this.geoJsons.reach = []
           res.data.forEach((line) => {
@@ -195,30 +196,25 @@ export default {
     async getOverall(time) {
       this.hideCharts()
       const hruOverallQuery = axios.get(
-        `http://127.0.0.1:3333/api/hru/overall/${this.timeRange[0].id}/${
+        `hru/overall/${this.timeRange[0].id}/${
           this.timeRange[this.timeRange.length - 1].id
         }`
       )
       const reachOverallQuery = axios.get(
-        `http://127.0.0.1:3333/api/reach/overall/${this.timeRange[0].id}/${
+        `reach/overall/${this.timeRange[0].id}/${
           this.timeRange[this.timeRange.length - 1].id
         }`
       )
-      const soilCompositionQuery = axios.get(
-        `http://127.0.0.1:3333/api/gishru/soil`
-      )
-      const reachWidthQuery = axios.get(
-        `http://127.0.0.1:3333/api/gisreach/width`
-      )
-      await axios
-        .all([
-          hruOverallQuery,
-          reachOverallQuery,
-          soilCompositionQuery,
-          reachWidthQuery,
-        ])
+      const soilCompositionQuery = axios.get(`gishru/soil`)
+      const reachWidthQuery = axios.get(`gisreach/width`)
+      await Axios.all([
+        hruOverallQuery,
+        reachOverallQuery,
+        soilCompositionQuery,
+        reachWidthQuery,
+      ])
         .then(
-          axios.spread(async (...responses) => {
+          Axios.spread(async (...responses) => {
             await this.setupHeaderCharts()
             /* Data HRU - OVERALL */
             responses[0].data.forEach((hru) => {
@@ -251,12 +247,10 @@ export default {
     },
     async getAvailableTimeRange() {
       await axios
-        .get(`http://127.0.0.1:3333/api/hru/daterange`)
+        .get(`hru/daterange`)
         .then(async (resHru) => {
           await axios
-            .get(
-              `http://127.0.0.1:3333/api/time/daterange/${resHru.data[0]}/${resHru.data[1]}`
-            )
+            .get(`time/daterange/${resHru.data[0]}/${resHru.data[1]}`)
             .then((res) => {
               this.timeRange = res.data
             })
@@ -270,7 +264,7 @@ export default {
     },
     async getOneShape(id) {
       await axios
-        .get(`http://127.0.0.1:3333/api/hru/id/${id}`)
+        .get(`hru/id/${id}`)
         .then((res) => {
           this.geoJsons = [res.data]
         })
