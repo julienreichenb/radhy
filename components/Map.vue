@@ -1,18 +1,20 @@
 <template>
   <div>
     <client-only v-if="geo">
-      <b-row class="text-center">
-        <b-col v-for="option in show" :key="option.key">
-          <b-form-checkbox
-            :id="option.key"
-            v-model="option.active"
-            :name="option.key"
-          >
-            <span>{{ $t('dashboard.map.options.' + option.key) }}</span>
-          </b-form-checkbox>
-        </b-col>
-      </b-row>
       <l-map ref="map" :zoom="zoom" :center="center">
+        <l-control class="options-control" position="bottomleft">
+          <b-row>
+            <b-col v-for="option in show" :key="option.key" md="6">
+              <b-form-checkbox
+                :id="option.key"
+                v-model="option.active"
+                :name="option.key"
+              >
+                <span>{{ $t('dashboard.map.options.' + option.key) }}</span>
+              </b-form-checkbox>
+            </b-col>
+          </b-row>
+        </l-control>
         <l-control>
           <b-button id="infoButton" v-b-modal.info-map class="map-button">
             <font-awesome-layers class="fa-3x">
@@ -94,7 +96,7 @@ export default {
         'https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png',
       attribution:
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-      center: [44.456817134, 5.740635221],
+      center: [44.430817134, 5.760635221],
       zoom: 10,
       show: [
         {
@@ -167,24 +169,28 @@ export default {
           '<div><p><b>' +
             this.$t('dashboard.map.tooltip.stored') +
             '</b> : ' +
-            Math.round(feature.properties.stored) +
+            Math.round(feature.properties.stored).toLocaleString('de-CH') +
             ' L' +
             '</p><p><b>' +
             this.$t('dashboard.map.tooltip.rain') +
             '</b> : ' +
-            Math.round(feature.properties.rain) +
+            Math.round(feature.properties.rain).toLocaleString('de-CH') +
             ' L' +
             '</p><p><b>' +
             this.$t('dashboard.map.tooltip.snow') +
             '</b> : ' +
-            Math.round(feature.properties.snow) +
+            Math.round(feature.properties.snow).toLocaleString('de-CH') +
             ' L' +
             '</p><p><b>' +
             this.$t('dashboard.map.tooltip.elevation') +
             '</b> : ' +
             Math.round(feature.properties.elevation) +
             'm' +
-            '</p></div>',
+            '</p><hr><p><b>' +
+            this.$t('dashboard.map.tooltip.composition') +
+            '</b>' +
+            this.getProportionLabel(feature) +
+            '</div>',
           {
             permanent: false,
             sticky: true,
@@ -206,12 +212,12 @@ export default {
             '</p><p><b>' +
             this.$t('dashboard.map.tooltip.storedReach') +
             '</b> : ' +
-            Math.round(feature.properties.stored) +
+            Math.round(feature.properties.stored).toLocaleString('de-CH') +
             ' L' +
             '</p><p><b>' +
             this.$t('dashboard.map.tooltip.runoff') +
             '</b> : ' +
-            Math.round(feature.properties.runoff) +
+            Math.round(feature.properties.runoff).toLocaleString('de-CH') +
             ' L' +
             '</p></div>',
           {
@@ -258,6 +264,33 @@ export default {
         })
       )
     },
+    getProportionLabel(feature) {
+      if (
+        !feature.properties.argile ||
+        !feature.properties.sable ||
+        !feature.properties.limon
+      )
+        return '<p>' + this.$t('dashboard.chart.unknown') + '</p>'
+      const total =
+        feature.properties.argile +
+        feature.properties.sable +
+        feature.properties.limon
+      return (
+        '<p>' +
+        this.$t('dashboard.chart.argile') +
+        ' ' +
+        ((feature.properties.argile * 100) / total).toFixed(1) +
+        '%</p><p>' +
+        this.$t('dashboard.chart.sable') +
+        ' ' +
+        ((feature.properties.sable * 100) / total).toFixed(1) +
+        '%</p><p>' +
+        this.$t('dashboard.chart.limon') +
+        ' ' +
+        ((feature.properties.limon * 100) / total).toFixed(1) +
+        '%</p>'
+      )
+    },
     getScale(line, max) {
       return (line * 100) / max
     },
@@ -288,5 +321,13 @@ export default {
 }
 .leaflet-tooltip p {
   margin: 0.2em 0;
+}
+.options-control {
+  background-color: rgba(230, 230, 230, 0.7);
+  border: 1px solid $basecolor-dark;
+  border-radius: 3px;
+  padding: 5px;
+  margin: 5px;
+  z-index: 104000;
 }
 </style>

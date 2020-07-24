@@ -9,8 +9,15 @@ class GisReachController {
     return gisReach.toJSON()
   }
 
+  async width() {
+    const gisReach = await GisReach.query()
+      .select(['id', 'r_width as width'])
+      .fetch()
+    return gisReach.toJSON()
+  }
+
   async all() {
-    const gisReach = await GisReach.query().with('hrus').fetch()
+    const gisReach = await GisReach.query().with('reachs').fetch()
     return gisReach.toJSON()
   }
 }

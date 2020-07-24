@@ -12,7 +12,11 @@
       @change="getShapes"
     />
     <b-row id="data">
-      <b-col md="8">
+      <b-col md="12" lg="4" class="mb-3">
+        <Map v-if="loaded" id="map" :geo="geoJsons" />
+        <Loading v-else />
+      </b-col>
+      <b-col md="12" lg="8">
         <div id="charts">
           <b-card
             v-for="card in cards"
@@ -23,18 +27,27 @@
             <template v-slot:header>
               <b-row align-h="between" class="m-auto">
                 <h5 v-html="getText(card.key, true)" />
-                <font-awesome-layers class="fa-2x">
-                  <font-awesome-icon
-                    icon="circle"
-                    :style="{ color: card.color }"
-                  />
-                  <font-awesome-icon icon="circle" transform="shrink-1" />
-                  <font-awesome-icon
-                    :icon="card.icon"
-                    transform="shrink-7"
-                    :style="{ color: card.color }"
-                  />
-                </font-awesome-layers>
+                <div>
+                  <b-button
+                    v-for="chart in card.charts"
+                    :key="chart.key"
+                    class="chart-button ml-1"
+                    @click="displayChart(card.key, chart.key)"
+                  >
+                    <font-awesome-layers class="fa-2x">
+                      <font-awesome-icon
+                        icon="circle"
+                        :style="{ color: chart.color }"
+                      />
+                      <font-awesome-icon icon="circle" transform="shrink-1" />
+                      <font-awesome-icon
+                        :icon="chart.icon"
+                        transform="shrink-7"
+                        :style="{ color: chart.color }"
+                      />
+                    </font-awesome-layers>
+                  </b-button>
+                </div>
               </b-row>
             </template>
             <b-card-text>
@@ -55,10 +68,6 @@
             </b-card-text>
           </b-card>
         </div>
-      </b-col>
-      <b-col md="4">
-        <Map v-if="loaded" id="map" :geo="geoJsons" />
-        <Loading v-else />
       </b-col>
     </b-row>
   </div>
@@ -85,31 +94,56 @@ export default {
       cards: [
         {
           key: 'hru',
-          icon: 'seedling',
-          color: '#0b6317',
           charts: [
             {
               display: false,
-              icon: 'cloud-showers-heavy',
-              color: '#668dcc',
               key: 'overall',
+              icon: 'cloud-showers-heavy',
+              color: '#4f82db',
               type: 'LineChart',
               data: [],
               options: {},
             },
+            {
+              display: false,
+              key: 'soil',
+              icon: 'layer-group',
+              color: '#94570c',
+              type: 'PieChart',
+              data: [],
+              options: {},
+            },
+            /*
+            {
+              display: false,
+              key: 'agriculture',
+              icon: 'seedling',
+              color: '#0b6317',
+              type: 'AreaChart',
+              data: [],
+              options: {},
+            },
+            */
           ],
         },
         {
           key: 'reach',
-          icon: 'tint',
-          color: '#265ad4',
           charts: [
             {
               display: false,
-              icon: 'random',
-              color: '#668dcc',
               key: 'overall',
-              type: 'LineChart',
+              icon: 'tint',
+              color: '#265ad4',
+              type: 'AreaChart',
+              data: [],
+              options: {},
+            },
+            {
+              display: false,
+              key: 'width',
+              icon: 'arrows-alt-h',
+              color: '#888888',
+              type: 'Histogram',
               data: [],
               options: {},
             },
@@ -170,20 +204,43 @@ export default {
           this.timeRange[this.timeRange.length - 1].id
         }`
       )
+      const soilCompositionQuery = axios.get(
+        `http://127.0.0.1:3333/api/gishru/soil`
+      )
+      const reachWidthQuery = axios.get(
+        `http://127.0.0.1:3333/api/gisreach/width`
+      )
       await axios
-        .all([hruOverallQuery, reachOverallQuery])
+        .all([
+          hruOverallQuery,
+          reachOverallQuery,
+          soilCompositionQuery,
+          reachWidthQuery,
+        ])
         .then(
           axios.spread(async (...responses) => {
             await this.setupHeaderCharts()
+            /* Data HRU - OVERALL */
             responses[0].data.forEach((hru) => {
               hru.rain += hru.snow
               delete hru.snow
               hru.time_id = this.getDayLabel(hru.time_id)
               this.cards[0].charts[0].data.push(Object.values(hru))
             })
+            /* Data REACH - OVERALL & WIDTH  */
             responses[1].data.forEach((reach) => {
               reach.time_id = this.getDayLabel(reach.time_id)
               this.cards[1].charts[0].data.push(Object.values(reach))
+            })
+            /* Data HRU - SOIL */
+            Object.entries(responses[2].data[0]).forEach((line) => {
+              line[0] = this.$t('dashboard.chart.' + line[0])
+              line[1] = parseInt(line[1])
+              this.cards[0].charts[1].data.push(line)
+            })
+            /* Data REACH - WIDTH */
+            responses[3].data.forEach((reach) => {
+              this.cards[1].charts[1].data.push([reach.id, reach.width])
             })
             this.showCharts()
           })
@@ -250,6 +307,7 @@ export default {
       return labels
     },
     setupHeaderCharts() {
+      /* HRU - OVERALL */
       this.cards[0].charts[0].data = [
         [
           this.$t('dashboard.chart.day'),
@@ -257,23 +315,11 @@ export default {
           this.$t('dashboard.chart.stored'),
         ],
       ]
-      this.cards[1].charts[0].data = [
-        [
-          this.$t('dashboard.chart.day'),
-          this.$t('dashboard.chart.runoff'),
-          this.$t('dashboard.chart.storedr'),
-        ],
-      ]
-      const options = {
-        vAxis: {
-          format: 'short',
-        },
-        legend: { position: 'top' },
-      }
+      this.cards[0].charts[0].options.title = this.$t(
+        'dashboard.chart.title.hruoverall'
+      )
       this.cards[0].charts[0].options.legend = { position: 'top' }
-      this.cards[0].charts[0].options.vAxis = {
-        format: 'short',
-      }
+      this.cards[0].charts[0].options.vAxis = { format: 'short' }
       this.cards[0].charts[0].options.series = {
         0: { targetAxisIndex: 0 },
         1: { targetAxisIndex: 1 },
@@ -282,10 +328,51 @@ export default {
         0: { title: this.$t('dashboard.chart.rain') },
         1: { title: this.$t('dashboard.chart.stored') },
       }
-      this.cards[1].charts[0].options = options
+      /* REACH - OVERALL */
+      this.cards[1].charts[0].options.title = this.$t(
+        'dashboard.chart.title.reachoverall'
+      )
+      this.cards[1].charts[0].data = [
+        [
+          this.$t('dashboard.chart.day'),
+          this.$t('dashboard.chart.runoff'),
+          this.$t('dashboard.chart.storedr'),
+        ],
+      ]
+      this.cards[1].charts[0].options.legend = { position: 'top' }
+      this.cards[1].charts[0].options.vAxis = { format: 'short' }
+      this.cards[1].charts[0].options.isStacked = true
+      /* HRU - SOIL */
+      this.cards[0].charts[1].options.title = this.$t(
+        'dashboard.chart.title.soil'
+      )
+      this.cards[0].charts[1].data = [
+        [this.$t('dashboard.chart.type'), this.$t('dashboard.chart.quantity')],
+      ]
+      /* REACH - WIDTH */
+      this.cards[1].charts[1].options.title = this.$t(
+        'dashboard.chart.title.width'
+      )
+      this.cards[1].charts[1].data = [
+        ['id', 'width'],
+      ]
+      this.cards[1].charts[1].options.legend = { position: 'none' }
+      this.cards[1].charts[1].options.histogram = {
+        maxNumBuckets: 2,
+        minNumBuckets: 2,
+      }
     },
     removeDuplicates(array) {
       return array.filter((a, b) => array.indexOf(a) === b)
+    },
+    displayChart(cartKey, chartKey) {
+      this.cards
+        .filter((c) => c.key === cartKey)[0]
+        .charts.forEach((chart) => {
+          chart.key === chartKey
+            ? (chart.display = true)
+            : (chart.display = false)
+        })
     },
     showCharts() {
       this.cards[0].charts[0].display = true
@@ -314,21 +401,27 @@ export default {
 }
 #time-slider {
   width: 100%;
-  margin: 1em 0em 2em 0em;
-  padding: 0em 5em;
-}
-#data {
-  height: 70vh;
+  margin: 1em 0 2em 0;
+  padding: 0 5em;
 }
 #charts {
-  margin-bottom: 0.3em;
+  margin-bottom: 2em;
 }
 #map {
-  margin-bottom: 0.3em;
-  height: 100%;
+  height: 79vh;
+  min-height: 650px;
 }
 .card {
   margin-bottom: 0.8em;
+}
+.chart-button,
+.chart-button:active,
+.chart-button:hover,
+.chart-button:focus {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
 }
 .slider.slider-horizontal {
   width: 100% !important;

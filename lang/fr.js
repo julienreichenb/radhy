@@ -82,6 +82,18 @@ export default {
       stored: 'Nappes phréatiques (L)',
       runoff: 'Eau écoulée (L)',
       storedr: 'Eau stagnante (L)',
+      type: 'Type de sol',
+      quantity: 'Proportion',
+      argile: 'Argile',
+      limon: 'Limon',
+      sable: 'Sable',
+      unknown: 'Inconnue',
+      title: {
+        hruoverall: 'Influence des précipitations sur les nappes phréatiques',
+        reachoverall: "Proportion d'eau stagnante / eau écoulée",
+        soil: 'Composition globale des sols',
+        width: "Largeur des cours d'eau, en mètres",
+      },
     },
     map: {
       modal: {
@@ -101,6 +113,7 @@ export default {
         storedReach: 'Eau stagnante',
         elevation: 'Altitude',
         width: 'Largeur',
+        composition: 'Composition du sol',
         recenter: 'Recentrer la carte',
       },
       options: {

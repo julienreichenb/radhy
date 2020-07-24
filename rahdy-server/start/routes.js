@@ -47,10 +47,12 @@ Route.group(() => {
 Route.group(() => {
   Route.get('id/:id', 'GisHruController.byId')
   Route.get('all', 'GisHruController.all')
+  Route.get('soil', 'GisHruController.soil')
 }).prefix('api/gishru')
 
 /** GisReach Routes */
 Route.group(() => {
   Route.get('id/:id', 'GisReachController.byId')
   Route.get('all', 'GisReachController.all')
+  Route.get('width', 'GisReachController.width')
 }).prefix('api/gisreach')

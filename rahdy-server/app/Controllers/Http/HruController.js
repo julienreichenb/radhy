@@ -22,7 +22,10 @@ class HruController {
           'rain', rain,
           'snow', snow,
           'stored', stored,
-          'elevation', elevation
+          'elevation', elevation,
+          'argile', argile,
+          'limon', limon,
+          'sable', sable
         )
       ) AS row
       FROM hrus h INNER JOIN gis_hrus gh ON h.gis_hru_id = gh.id
@@ -44,7 +47,10 @@ class HruController {
           'rain', rain,
           'snow', snow,
           'stored', stored,
-          'elevation', elevation
+          'elevation', elevation,
+          'argile', argile,
+          'limon', limon,
+          'sable', sable
         )
       ) AS row
       FROM hrus h INNER JOIN gis_hrus gh ON h.gis_hru_id = gh.id
@@ -55,7 +61,7 @@ class HruController {
   }
 
   async overall({ params }) {
-    const hru = await DB.table('hrus')
+    return await DB.table('hrus')
       .select('time_id')
       .whereBetween('time_id', [params.start, params.end])
       .sum('rain as rain')
@@ -63,7 +69,6 @@ class HruController {
       .sum('stored as stored')
       .groupBy('time_id')
       .orderBy('time_id')
-    return hru
   }
 
   async all() {
@@ -78,7 +83,10 @@ class HruController {
           'rain', rain,
           'snow', snow,
           'stored', stored,
-          'elevation', elevation
+          'elevation', elevation,
+          'argile', argile,
+          'limon', limon,
+          'sable', sable
         )
       ) AS row
       FROM hrus h INNER JOIN gis_hrus gh ON h.gis_hru_id = gh.id`

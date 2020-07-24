@@ -5,7 +5,7 @@ const Model = use('Model')
 
 class GisReach extends Model {
   static get table() {
-    return 'gisreaches'
+    return 'gis_reaches'
   }
 
   static boot() {

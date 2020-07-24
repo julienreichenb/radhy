@@ -13,6 +13,7 @@
   height: 100%;
   width: 100%;
   text-align: center;
+  margin: 0 0 3em 0;
 }
 
 #loading > div {
