@@ -353,9 +353,7 @@ export default {
       this.cards[1].charts[1].options.title = this.$t(
         'dashboard.chart.title.width'
       )
-      this.cards[1].charts[1].data = [
-        ['id', 'width'],
-      ]
+      this.cards[1].charts[1].data = [['id', 'width']]
       this.cards[1].charts[1].options.legend = { position: 'none' }
       this.cards[1].charts[1].options.histogram = {
         maxNumBuckets: 2,
