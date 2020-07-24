@@ -83,6 +83,18 @@ export default {
       stored: 'Underground water (L)',
       runoff: 'Streamed water (L)',
       storedr: 'Stagnant water (L)',
+      type: 'Soil Type',
+      quantity: 'Proportion',
+      argile: 'Clay',
+      limon: 'Silt',
+      sable: 'Sand',
+      unknown: 'Unknown',
+      title: {
+        hruoverall: 'Rainfall Influence on the Underground Water',
+        reachoverall: 'Streaming Water / Stagnant Water Proportions',
+        soil: 'Global Soil Composition',
+        width: 'Watercourses Width, in meters',
+      },
     },
     map: {
       modal: {
@@ -95,13 +107,14 @@ export default {
           `<p>You can navigate between the days by using the <b>timeline</b> at the top of the page.</p>`,
       },
       tooltip: {
-        stored: 'Underground water',
+        stored: 'Underground Water',
         rain: 'Rain',
         snow: 'Snow',
-        runoff: 'Streamed water',
-        storedReach: 'Stagnant water',
+        runoff: 'Streamed Water',
+        storedReach: 'Stagnant Water',
         elevation: 'Elevation',
         width: 'Width',
+        composition: 'Soil Composition',
         recenter: 'Recenter the map',
       },
       options: {
