@@ -68,12 +68,12 @@ export default {
     },
     reach: {
       title: "Cours d'eau",
-      text: `Les cours d'eau du bassin sont découpés en tronçons, dont le débit et la quantité d'eau stagnante sont également mesurés chaque heure.`,
+      text: `Les cours d'eau du bassin sont découpés en tronçons, dont le débit et la quantité d'eau actuellement présente sont également mesurés chaque heure.`,
       runoff: {
         title: 'Eau écoulée, en litres',
       },
       stored: {
-        title: 'Eau stagnante, en litres',
+        title: 'Eau dans le tronçon, en litres',
       },
     },
     chart: {
@@ -81,7 +81,7 @@ export default {
       rain: 'Pluie (L)',
       stored: 'Nappes phréatiques (L)',
       runoff: 'Eau écoulée (L)',
-      storedr: 'Eau stagnante (L)',
+      storedr: 'Eau dans le tronçon (L)',
       type: 'Type de sol',
       quantity: 'Proportion',
       argile: 'Argile',
@@ -89,8 +89,9 @@ export default {
       sable: 'Sable',
       unknown: 'Inconnue',
       title: {
-        hruoverall: 'Influence des précipitations sur les nappes phréatiques',
-        reachoverall: "Proportion d'eau stagnante / eau écoulée",
+        hruoverall:
+          "Influence des précipitations sur l'eau contenue dans le sol",
+        reachoverall: "Proportion d'eau dans le tronçon / eau écoulée",
         soil: 'Composition globale des sols',
         width: "Largeur des cours d'eau, en mètres",
       },
@@ -100,17 +101,17 @@ export default {
         title: 'Signification des marqueurs sur la carte',
         text:
           `<p>Les <b>précipitations</b> sont décrites par les <span class="water-circle">cercles bleus</span>. Plus le cercle est grand et coloré, plus les précipitations sont importantes.</p>` +
-          `<p>Les <b>zones</b> marquées en <span class="hru-area">bleu foncé</span> symbolisent l'eau stockées dans le sol : plus la zone est foncée, plus la nappe est conséquente.</p>` +
+          `<p>Les <b>zones</b> marquées en <span class="hru-area">bleu foncé</span> symbolisent l'eau stockées dans le sol : plus la zone est foncée, plus la quantité d'eau contenue dans le sol est conséquente.</p>` +
           `<p>Les <b>cours d'eau</b> sont représentés sur la carte par les <span class="reach-vector">traits bleus</span>.` +
-          ` L'intensité de la couleur est influencée par la quantité d'eau stagnante dans le tronçon et la largeur par le débit s'y écoulant.</p>` +
+          ` L'intensité de la couleur est influencée par la quantité d'eau dans le tronçon et la largeur par le débit s'y écoulant.</p>` +
           `<p>Vous pouvez naviguer de jour en jour en utilisant la <b>ligne temporelle</b> au sommet de la page.</p>`,
       },
       tooltip: {
-        stored: 'Nappe phréatique',
+        stored: 'Eau dans le sol',
         rain: 'Pluie',
         snow: 'Neige',
         runoff: 'Eau écoulée',
-        storedReach: 'Eau stagnante',
+        storedReach: 'Eau dans le tronçon',
         elevation: 'Altitude',
         width: 'Largeur',
         composition: 'Composition du sol',
