@@ -104,10 +104,23 @@ export default {
           active: true,
         },
         { key: 'stored', active: true },
-        { key: 'rain', active: true },
+        { key: 'rain', active: false },
         { key: 'reach', active: true },
       ],
       max: {},
+      hruGradient: [
+        'rgba(255, 0, 0, .6)',
+        'rgba(227, 28, 0, .6)',
+        'rgba(199, 56, 0, .6)',
+        'rgba(171, 84, 0, .6)',
+        'rgba(143, 112, 0, .6)',
+        'rgba(115, 140, 0, .6)',
+        'rgba(87, 168, 0, .6)',
+        'rgba(59, 196, 0, .6)',
+        'rgba(31, 224, 0, .6)',
+        'rgba(0, 255, 0, .6)',
+      ],
+      tempMax: 0,
     }
   },
   computed: {
@@ -123,13 +136,13 @@ export default {
     },
     styleOptionsHruStored() {
       return (feature) => {
-        const color =
-          'rgba(23, 27, 84,' +
-          this.getScale(feature.properties.stored, this.max.hruStored) / 5 +
-          ')'
+        let c = Math.floor(
+          this.getScale(feature.properties.stored, this.max.hruStored) * 10
+        )
+        c = c > 9 ? 9 : c
         return {
-          color,
-          fillColor: color,
+          color: 'transparent',
+          fillColor: this.hruGradient[c],
           opacity: 0.8,
           fillOpacity: 1,
           weight: 0.5,
