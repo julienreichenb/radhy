@@ -25,21 +25,14 @@ class ReachController {
     return reach.rows[0]
   }
 
-  async geoByDate({ params }) {
+  async reachByDate({ params }) {
     const reach = await DB.raw(
-      `SELECT json_build_object(
-        'id', gr.ogc_fid,
-        'time_id', time_id,
-        'type', 'Feature',
-        'geometry', ST_AsGeoJSON(gr.geom)::json,
-        'properties', json_build_object(
-          'id', r.id,
-          'runoff', runoff,
-          'stored', stored,
-          'width', r_width
-        )
-      ) AS row
-      FROM reaches r INNER JOIN gis_reaches gr ON r.gis_reach_id = gr.id
+      `SELECT
+        id,
+        runoff,
+        stored,
+        gis_reach_id
+      FROM reaches
       WHERE time_id = ?`,
       [params.idTime]
     )

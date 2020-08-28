@@ -10,7 +10,7 @@ class HruController {
     return [min, max]
   }
 
-  async byId({ params }) {
+  async byGeoId({ params }) {
     const hru = await DB.raw(
       `SELECT json_build_object(
         'id', gh.id,
@@ -33,6 +33,21 @@ class HruController {
       [params.id]
     )
     return hru.rows[0]
+  }
+
+  async hruByDate({ params }) {
+    const hru = await DB.raw(
+      `SELECT 
+        id,
+        rain,
+        snow,
+        stored,
+        gis_hru_id
+      FROM hrus
+      WHERE time_id = ?`,
+      [params.idTime]
+    )
+    return hru.rows
   }
 
   async geoByDate({ params }) {

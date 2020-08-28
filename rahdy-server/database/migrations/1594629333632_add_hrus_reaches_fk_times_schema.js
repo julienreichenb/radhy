@@ -4,7 +4,7 @@
 const Schema = use('Schema')
 
 class AddHrusReachesFkTimesSchema extends Schema {
-  up () {
+  up() {
     this.table('hrus', (table) => {
       // alter table
       table.integer('time_id')
@@ -15,7 +15,7 @@ class AddHrusReachesFkTimesSchema extends Schema {
     })
   }
 
-  down () {
+  down() {
     this.table('hrus', (table) => {
       // reverse alternations
       table.dropColumns('time_id')

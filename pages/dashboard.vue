@@ -9,7 +9,7 @@
       :ticks="getTimeTicks()"
       :ticks-labels="getTimeLabels()"
       :step="timeRange[1].id - timeRange[0].id"
-      @change="getShapes"
+      @change="getData"
     />
     <b-row id="data">
       <b-col md="12" lg="4" class="mb-3">
@@ -74,6 +74,8 @@
 </template>
 <script>
 import Axios from 'axios'
+import hruShapes from '../static/json/hruShapes.json'
+import reachShapes from '../static/json/reachShapes.json'
 import Loading from '../components/Loading'
 import Map from '../components/Map'
 import axios from '../plugins/axios'
@@ -86,6 +88,8 @@ export default {
     return {
       timeRange: null,
       loaded: false,
+      hruShapes,
+      reachShapes,
       geoJsons: {},
       snowValues: null,
       rainValues: null,
@@ -155,25 +159,45 @@ export default {
   },
   async created() {
     await this.getAvailableTimeRange()
-    this.getShapes(this.timeRange[0].id)
+    this.getData(this.timeRange[0].id)
     this.getOverall(this.timeRange[0].id)
   },
   methods: {
-    async getShapes(time) {
+    async getData(time) {
       this.resetValues()
       if (time.newValue) time = time.newValue
       this.geoJsons = {}
-      await this.getHrus(time)
-      await this.getReaches(time)
+      await this.loadBoth(time)
       this.loaded = true
+    },
+    loadBoth(time) {
+      this.getHrus(time)
+      this.getReaches(time)
     },
     async getHrus(time) {
       await axios
-        .get(`hru/geotime/${time}`)
+        .get(`hru/hrutime/${time}`)
         .then((res) => {
           this.geoJsons.hru = []
           res.data.forEach((line) => {
-            this.geoJsons.hru.push(line.row)
+            const shape = this.hruShapes.find((s) => s.id === line.gis_hru_id)
+            const geoJ = {
+              id: line.gis_hru_id,
+              time_id: time,
+              type: 'Feature',
+              geometry: shape.shapes,
+              properties: {
+                id: line.id,
+                rain: line.rain,
+                snow: line.snow,
+                stored: line.stored,
+                elevation: shape.elevation,
+                argile: shape.argile,
+                limon: shape.limon,
+                sable: shape.sable,
+              },
+            }
+            this.geoJsons.hru.push(geoJ)
           })
         })
         .catch((err) => {
@@ -182,11 +206,26 @@ export default {
     },
     async getReaches(time) {
       await axios
-        .get(`reach/geotime/${time}`)
+        .get(`reach/reachtime/${time}`)
         .then((res) => {
           this.geoJsons.reach = []
           res.data.forEach((line) => {
-            this.geoJsons.reach.push(line.row)
+            const shape = this.reachShapes.find(
+              (s) => s.id === line.gis_reach_id
+            )
+            const geoJ = {
+              id: line.gis_reach_id,
+              time_id: time,
+              type: 'Feature',
+              geometry: shape.shapes,
+              properties: {
+                id: line.id,
+                runoff: line.runoff,
+                stored: line.stored,
+                sable: shape.r_width,
+              },
+            }
+            this.geoJsons.reach.push(geoJ)
           })
         })
         .catch((err) => {
