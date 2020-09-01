@@ -91,11 +91,6 @@ export default {
       hruShapes,
       reachShapes,
       geoJsons: {},
-      snowValues: null,
-      rainValues: null,
-      storedHruValues: null,
-      runoffValues: null,
-      storedReachValues: null,
       cards: [
         {
           key: 'hru',
@@ -159,8 +154,8 @@ export default {
   },
   async created() {
     await this.getAvailableTimeRange()
+    this.getOverall()
     this.getData(this.timeRange[0].id)
-    this.getOverall(this.timeRange[0].id)
   },
   methods: {
     async getData(time) {
@@ -170,69 +165,37 @@ export default {
       await this.loadBoth(time)
       this.loaded = true
     },
-    loadBoth(time) {
-      this.getHrus(time)
-      this.getReaches(time)
+    async loadBoth(time) {
+      await this.getReaches(time)
+      await this.getHrus(time)
     },
     async getHrus(time) {
       await axios
         .get(`hru/hrutime/${time}`)
         .then((res) => {
-          this.geoJsons.hru = []
-          res.data.forEach((line) => {
-            const shape = this.hruShapes.find((s) => s.id === line.gis_hru_id)
-            const geoJ = {
-              id: line.gis_hru_id,
-              time_id: time,
-              type: 'Feature',
-              geometry: shape.shapes,
-              properties: {
-                id: line.id,
-                rain: line.rain,
-                snow: line.snow,
-                stored: line.stored,
-                elevation: shape.elevation,
-                argile: shape.argile,
-                limon: shape.limon,
-                sable: shape.sable,
-              },
-            }
-            this.geoJsons.hru.push(geoJ)
-          })
+          this.geoJsons.hru = res.data[0].data
         })
         .catch((err) => {
           console.log(err)
+        })
+        .finally(() => {
+          console.log('HRUs fetched')
         })
     },
     async getReaches(time) {
       await axios
         .get(`reach/reachtime/${time}`)
         .then((res) => {
-          this.geoJsons.reach = []
-          res.data.forEach((line) => {
-            const shape = this.reachShapes.find(
-              (s) => s.id === line.gis_reach_id
-            )
-            const geoJ = {
-              id: line.gis_reach_id,
-              time_id: time,
-              type: 'Feature',
-              geometry: shape.shapes,
-              properties: {
-                id: line.id,
-                runoff: line.runoff,
-                stored: line.stored,
-                sable: shape.r_width,
-              },
-            }
-            this.geoJsons.reach.push(geoJ)
-          })
+          this.geoJsons.reach = res.data[0].data
         })
         .catch((err) => {
           console.log(err)
         })
+        .finally(() => {
+          console.log('Reaches fetched')
+        })
     },
-    async getOverall(time) {
+    async getOverall() {
       this.hideCharts()
       const hruOverallQuery = axios.get(
         `hru/overall/${this.timeRange[0].id}/${

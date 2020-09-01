@@ -8,7 +8,7 @@
         class="ml-1 mr-1 mt-4 my-auto"
       >
         <a :href="$t('partners.' + partner + '.url')">
-          <img :src="getImgUrl(partner)" width="80%" v-bind:alt="partner" />
+          <img :src="getImgUrl(partner)" width="80%" :alt="partner" />
         </a>
       </b-col>
     </b-row>

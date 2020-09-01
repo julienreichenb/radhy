@@ -37,12 +37,47 @@ class HruController {
 
   async hruByDate({ params }) {
     const hru = await DB.raw(
-      `SELECT 
-        id,
-        rain,
-        snow,
-        stored,
-        gis_hru_id
+      `SELECT json_agg (
+        json_build_object(
+          'id', gh.id,
+          'time_id', time_id,
+          'type', 'Feature',
+          'geometry', ST_AsGeoJSON(gh.geom)::json,
+          'properties', json_build_object(
+            'id', h.id,
+            'rain', rain,
+            'snow', snow,
+            'stored', stored,
+            'elevation', elevation,
+            'argile', argile,
+            'limon', limon,
+            'sable', sable
+          ),
+          'option', json_build_object(
+            'weight',  rain * 50 /
+              (SELECT MAX(rain) FROM hrus WHERE time_id = ?),
+            'fillcolor',
+              CASE WHEN ROUND(stored * 1000 /
+                (SELECT MAX(stored) FROM hrus WHERE time_id = ?)) > 9 THEN 9
+              ELSE ROUND(stored * 1000 /
+                (SELECT MAX(stored) FROM hrus WHERE time_id = ?))
+              END
+          )
+        )
+      ) as data
+      FROM hrus h INNER JOIN gis_hrus gh ON h.gis_hru_id = gh.id
+      WHERE time_id = ?`,
+      [params.idTime, params.idTime, params.idTime, params.idTime]
+    )
+    return hru.rows
+  }
+
+  async hruMaxByDate({ params }) {
+    const hru = await DB.raw(
+      `SELECT
+        MAX(rain) as rain,
+        MAX(snow) as snow,
+        MAX(stored) as stored
       FROM hrus
       WHERE time_id = ?`,
       [params.idTime]

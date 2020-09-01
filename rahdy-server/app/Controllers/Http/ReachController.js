@@ -27,16 +27,43 @@ class ReachController {
 
   async reachByDate({ params }) {
     const reach = await DB.raw(
+      `SELECT json_agg(
+        json_build_object(
+          'id', gr.ogc_fid,
+          'time_id', time_id,
+          'type', 'Feature',
+          'geometry', ST_AsGeoJSON(gr.geom)::json,
+          'properties', json_build_object(
+            'id', r.id,
+            'runoff', runoff,
+            'stored', stored,
+            'width', r_width
+          ),
+          'option', json_build_object(
+            'color', stored * 10 /
+              (SELECT MAX(stored) FROM reaches WHERE time_id = ?),
+            'weight', runoff * 5 /
+              (SELECT MAX(runoff) FROM reaches WHERE time_id = ?)
+          )
+        )
+      ) as data
+      FROM reaches r INNER JOIN gis_reaches gr ON r.gis_reach_id = gr.id
+      WHERE r.time_id = ?`,
+      [params.idTime, params.idTime, params.idTime]
+    )
+    return reach.rows
+  }
+
+  async reachMaxByDate({ params }) {
+    const hru = await DB.raw(
       `SELECT
-        id,
-        runoff,
-        stored,
-        gis_reach_id
+        MAX(stored) as stored,
+        MAX(runoff) as runoff
       FROM reaches
       WHERE time_id = ?`,
       [params.idTime]
     )
-    return reach.rows
+    return hru.rows
   }
 
   async overall({ params }) {

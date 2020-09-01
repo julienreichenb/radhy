@@ -60,8 +60,8 @@
         ></l-geo-json>
         <l-geo-json
           v-if="show[3].active"
-          :options="optionsReach"
           :geojson="geo.reach"
+          :options="optionsReach"
           :options-style="styleOptionsReach"
         ></l-geo-json>
       </l-map>
@@ -97,16 +97,6 @@ export default {
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       center: [44.430817134, 5.760635221],
       zoom: 10,
-      show: [
-        {
-          key: 'tooltip',
-          active: true,
-        },
-        { key: 'stored', active: true },
-        { key: 'rain', active: false },
-        { key: 'reach', active: true },
-      ],
-      max: {},
       hruGradient: [
         'rgba(255, 0, 0, .6)',
         'rgba(227, 28, 0, .6)',
@@ -119,7 +109,15 @@ export default {
         'rgba(31, 224, 0, .6)',
         'rgba(0, 255, 0, .6)',
       ],
-      tempMax: 0,
+      show: [
+        {
+          key: 'tooltip',
+          active: true,
+        },
+        { key: 'stored', active: true },
+        { key: 'rain', active: false },
+        { key: 'reach', active: true },
+      ],
     }
   },
   computed: {
@@ -135,13 +133,9 @@ export default {
     },
     styleOptionsHruStored() {
       return (feature) => {
-        let c = Math.floor(
-          this.getScale(feature.properties.stored, this.max.hruStored) * 10
-        )
-        c = c > 9 ? 9 : c
         return {
           color: 'transparent',
-          fillColor: this.hruGradient[c],
+          fillColor: this.hruGradient[feature.option.fillcolor],
           opacity: 0.8,
           fillOpacity: 1,
           weight: 0.5,
@@ -152,7 +146,7 @@ export default {
       return (feature) => {
         return {
           color: '#668dcc',
-          weight: this.getScale(feature.properties.rain, this.max.rain) * 0.5,
+          weight: feature.option.weight,
           opacity: 0.3,
           fillOpacity: 0,
         }
@@ -161,13 +155,8 @@ export default {
     styleOptionsReach() {
       return (feature) => {
         return {
-          color: `rgba(0, 166, 255, ${(
-            this.getScale(feature.properties.stored, this.max.reachStored) / 10
-          ).toString()})`,
-          weight: this.getScale(
-            feature.properties.runoff,
-            this.max.runoff / 0.05
-          ),
+          color: feature.option.color,
+          weight: feature.option.weight,
           opacity: 0.8,
         }
       }
@@ -240,40 +229,11 @@ export default {
       }
     },
   },
-  created() {
-    this.computeMax()
-  },
   methods: {
     recenter() {
       this.$refs.map.mapObject.setView(
         new this.$L.LatLng(this.center[0], this.center[1]),
         this.zoom
-      )
-    },
-    computeMax() {
-      this.max.hruStored = Math.max.apply(
-        Math,
-        this.geo.hru.map(function (o) {
-          return o.properties.stored
-        })
-      )
-      this.max.rain = Math.max.apply(
-        Math,
-        this.geo.hru.map(function (o) {
-          return o.properties.rain
-        })
-      )
-      this.max.reachStored = Math.max.apply(
-        Math,
-        this.geo.reach.map(function (o) {
-          return o.properties.stored
-        })
-      )
-      this.max.runoff = Math.max.apply(
-        Math,
-        this.geo.reach.map(function (o) {
-          return o.properties.runoff
-        })
       )
     },
     getProportionLabel(feature) {
@@ -302,9 +262,6 @@ export default {
         ((feature.properties.limon * 100) / total).toFixed(1) +
         '%</p>'
       )
-    },
-    getScale(line, max) {
-      return (line * 100) / max
     },
   },
 }
