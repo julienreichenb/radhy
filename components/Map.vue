@@ -155,9 +155,9 @@ export default {
     styleOptionsReach() {
       return (feature) => {
         return {
-          color: feature.option.color,
-          weight: feature.option.weight,
-          opacity: 0.8,
+          color: `rgba(0, 166, 255, ${feature.option.color})`,
+          weight: feature.option.weight * 1.2,
+          opacity: 1,
         }
       }
     },

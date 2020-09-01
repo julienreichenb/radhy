@@ -74,8 +74,6 @@
 </template>
 <script>
 import Axios from 'axios'
-import hruShapes from '../static/json/hruShapes.json'
-import reachShapes from '../static/json/reachShapes.json'
 import Loading from '../components/Loading'
 import Map from '../components/Map'
 import axios from '../plugins/axios'
@@ -88,8 +86,6 @@ export default {
     return {
       timeRange: null,
       loaded: false,
-      hruShapes,
-      reachShapes,
       geoJsons: {},
       cards: [
         {
@@ -166,7 +162,7 @@ export default {
       this.loaded = true
     },
     async loadBoth(time) {
-      await this.getReaches(time)
+      this.getReaches(time)
       await this.getHrus(time)
     },
     async getHrus(time) {
@@ -178,9 +174,6 @@ export default {
         .catch((err) => {
           console.log(err)
         })
-        .finally(() => {
-          console.log('HRUs fetched')
-        })
     },
     async getReaches(time) {
       await axios
@@ -190,9 +183,6 @@ export default {
         })
         .catch((err) => {
           console.log(err)
-        })
-        .finally(() => {
-          console.log('Reaches fetched')
         })
     },
     async getOverall() {
