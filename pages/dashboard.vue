@@ -5,7 +5,7 @@
       id="time-slider"
       :min="timeRange[0].id"
       :max="timeRange[timeRange.length - 1].id"
-      :value="timeRange[0].id"
+      :value="selectedTime && selectedTime.id"
       :ticks="getTimeTicks()"
       :ticks-labels="getTimeLabels()"
       :step="timeRange[1].id - timeRange[0].id"
@@ -13,7 +13,15 @@
     />
     <b-row id="data">
       <b-col md="12" lg="4" class="mb-3">
-        <Map v-if="loaded" id="map" :geo="geoJsons" />
+        <Map
+          v-if="selectedTime && selectedTime.loaded"
+          id="map"
+          :geo="geoJsons"
+          :playable="isPlayable"
+          :playing="isPlaying"
+          @play="play"
+          @stop="stop"
+        />
         <Loading v-else />
       </b-col>
       <b-col md="12" lg="8">
@@ -85,7 +93,10 @@ export default {
   data() {
     return {
       timeRange: null,
+      selectedTime: null,
       loaded: false,
+      isPlaying: false,
+      isPlayable: false,
       geoJsons: {},
       cards: [
         {
@@ -150,26 +161,68 @@ export default {
   },
   async created() {
     await this.getAvailableTimeRange()
+    this.getAllData()
     this.getOverall()
-    this.getData(this.timeRange[0].id)
   },
   methods: {
-    async getData(time) {
+    play() {
+      this.isPlaying = true
+      let timeIndex = 0
+      // First iteration
+      this.getData(this.timeRange[timeIndex].id)
+      // Start play
+      const playInterval = setInterval(() => {
+        timeIndex++
+        if (timeIndex >= this.timeRange.length || !this.isPlaying) {
+          this.isPlaying = false
+          clearInterval(playInterval)
+        } else {
+          this.getData(this.timeRange[timeIndex].id)
+        }
+      }, 2500)
+    },
+    stop() {
+      this.isPlaying = false
+    },
+    areFirstLoaded(nb) {
+      for (let i = 0; i <= nb && i < this.timeRange.length; i++) {
+        if (!this.timeRange[i].loaded) return false
+      }
+      return true
+    },
+    async getAllData() {
+      this.loaded = false
+      await this.timeRange.forEach((t) => {
+        t.data = { hru: null, reach: null }
+        t.loaded = false
+        this.loadBoth(t.id)
+      })
+    },
+    getData(time) {
       this.resetValues()
       if (time.newValue) time = time.newValue
-      this.geoJsons = {}
-      await this.loadBoth(time)
+      this.selectedTime = this.timeRange.find((t) => t.id === time)
+      this.geoJsons.hru = this.selectedTime.data.hru
+      this.geoJsons.reach = this.selectedTime.data.reach
       this.loaded = true
     },
-    async loadBoth(time) {
+    loadBoth(time) {
+      this.getHrus(time)
       this.getReaches(time)
-      await this.getHrus(time)
     },
     async getHrus(time) {
       await axios
         .get(`hru/hrutime/${time}`)
         .then((res) => {
-          this.geoJsons.hru = res.data[0].data
+          const currentTime = this.timeRange.find((t) => t.id === time)
+          currentTime.data.hru = res.data[0].data
+          currentTime.loaded = true
+          // Init map
+          if (currentTime === this.timeRange[0]) {
+            this.loaded = true
+            this.getData(currentTime.id)
+          }
+          this.isPlayable = this.areFirstLoaded(4)
         })
         .catch((err) => {
           console.log(err)
@@ -179,7 +232,8 @@ export default {
       await axios
         .get(`reach/reachtime/${time}`)
         .then((res) => {
-          this.geoJsons.reach = res.data[0].data
+          const currentTime = this.timeRange.find((t) => t.id === time)
+          currentTime.data.reach = res.data[0].data
         })
         .catch((err) => {
           console.log(err)
@@ -254,16 +308,6 @@ export default {
           console.log(err)
         })
     },
-    async getOneShape(id) {
-      await axios
-        .get(`hru/id/${id}`)
-        .then((res) => {
-          this.geoJsons = [res.data]
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    },
     getText(key, isTitle) {
       return isTitle
         ? this.$t('dashboard.' + key + '.title')
@@ -271,6 +315,7 @@ export default {
     },
     resetValues() {
       this.loaded = false
+      this.selectedTime = null
       this.geoJsons = {}
     },
     getTimeTicks() {

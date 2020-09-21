@@ -45,6 +45,47 @@
               />
             </font-awesome-layers>
           </b-button>
+          <b-button
+            v-if="!playing"
+            id="playButton"
+            class="map-button ml-3"
+            :disabled="!playable"
+            @click="play()"
+          >
+            <font-awesome-layers class="fa-3x">
+              <font-awesome-icon icon="circle" :style="{ color: '#6B8E23' }" />
+              <font-awesome-icon
+                class="text-white"
+                icon="circle"
+                transform="shrink-1"
+              />
+              <font-awesome-icon
+                icon="play"
+                transform="shrink-7"
+                :style="{ color: '#6B8E23' }"
+              />
+            </font-awesome-layers>
+          </b-button>
+          <b-button
+            v-else
+            id="stopButton"
+            class="map-button ml-3"
+            @click="stop()"
+          >
+            <font-awesome-layers class="fa-3x">
+              <font-awesome-icon icon="circle" :style="{ color: 'darkred' }" />
+              <font-awesome-icon
+                class="text-white"
+                icon="circle"
+                transform="shrink-1"
+              />
+              <font-awesome-icon
+                icon="stop"
+                transform="shrink-7"
+                :style="{ color: 'darkred' }"
+              />
+            </font-awesome-layers>
+          </b-button>
         </l-control>
         <l-tile-layer :url="url" :attribution="attribution" />
         <l-geo-json
@@ -89,6 +130,8 @@
 export default {
   props: {
     geo: { type: Object, required: true },
+    playing: { type: Boolean, default: false },
+    playable: { type: Boolean, default: false },
   },
   data() {
     return {
@@ -112,7 +155,7 @@ export default {
       show: [
         {
           key: 'tooltip',
-          active: true,
+          active: false,
         },
         { key: 'stored', active: true },
         { key: 'rain', active: false },
@@ -236,6 +279,13 @@ export default {
         this.zoom
       )
     },
+    play() {
+      this.show[0].active = false
+      this.$emit('play')
+    },
+    stop() {
+      this.$emit('stop')
+    },
     getProportionLabel(feature) {
       if (
         !feature.properties.argile ||
@@ -276,6 +326,17 @@ export default {
   box-shadow: none;
   padding: 0;
 }
+
+.map-button.disabled {
+  background: transparent;
+  opacity: 0.8;
+
+  svg:first-child,
+  svg:last-child {
+    color: gray !important;
+  }
+}
+
 #info-map span {
   font-weight: bold;
 }

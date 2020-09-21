@@ -55,7 +55,7 @@ class HruController {
           ),
           'option', json_build_object(
             'weight',  rain * 50 /
-              (SELECT MAX(rain) FROM hrus WHERE time_id = ?),
+              NULLIF((SELECT MAX(rain) FROM hrus WHERE time_id = ?), 0),
             'fillcolor',
               CASE WHEN ROUND(stored * 1000 /
                 (SELECT MAX(stored) FROM hrus WHERE time_id = ?)) > 9 THEN 9
