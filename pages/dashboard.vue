@@ -222,7 +222,8 @@ export default {
             this.loaded = true
             this.getData(currentTime.id)
           }
-          this.isPlayable = this.areFirstLoaded(4)
+          // Change isPlayable only if not already playable
+          if (!this.isPlayable) this.isPlayable = this.areFirstLoaded(4)
         })
         .catch((err) => {
           console.log(err)
