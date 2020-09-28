@@ -1,7 +1,7 @@
 <template>
   <div>
     <client-only v-if="geo">
-      <l-map ref="map" :zoom="zoom" :center="center" @update:zoom="zoomUpdated">
+      <l-map ref="map" :zoom="zoom" :center="center">
         <l-control class="options-control" position="bottomleft">
           <b-row>
             <b-col v-for="option in show" :key="option.key" md="6">
@@ -140,7 +140,6 @@ export default {
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       center: [44.430817134, 5.760635221],
       zoom: 10,
-      currentZoom: null,
       hruGradient: [
         'rgba(255, 0, 0, .6)',
         'rgba(227, 28, 0, .6)',
@@ -314,9 +313,6 @@ export default {
         '%</p>'
       )
     },
-  },
-  zoomUpdated(zoom) {
-    this.currentZoom = zoom
   },
 }
 </script>

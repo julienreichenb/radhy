@@ -11,7 +11,7 @@
       :step="timeRange[1].id - timeRange[0].id"
       @change="getData"
     />
-    <b-row id="data">
+    <b-row id="data" no-gutters>
       <b-col md="12" lg="4" class="mb-3">
         <Map
           v-if="selectedTime && selectedTime.loaded"
@@ -161,8 +161,8 @@ export default {
   },
   async created() {
     await this.getAvailableTimeRange()
+    await this.getOverall()
     this.getAllData()
-    this.getOverall()
   },
   methods: {
     play() {
@@ -190,9 +190,9 @@ export default {
       }
       return true
     },
-    async getAllData() {
+    getAllData() {
       this.loaded = false
-      await this.timeRange.forEach((t) => {
+      this.timeRange.forEach((t) => {
         t.data = { hru: null, reach: null }
         t.loaded = false
         this.loadBoth(t.id)

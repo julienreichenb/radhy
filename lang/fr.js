@@ -79,7 +79,7 @@ export default {
     chart: {
       day: 'Date',
       rain: 'Pluie (L)',
-      stored: 'Nappes phréatiques (L)',
+      stored: 'Eau dans le sol (L)',
       runoff: 'Eau écoulée (L)',
       storedr: 'Eau dans le tronçon (L)',
       type: 'Type de sol',

@@ -16,7 +16,7 @@ class HruController {
         'id', gh.id,
         'time_id', time_id,
         'type', 'Feature',
-        'geometry', ST_AsGeoJSON(gh.geom)::json,
+        'geometry', ST_AsGeoJson(gh.geom)::json,
         'properties', json_build_object(
           'id', h.id,
           'rain', rain,
@@ -42,7 +42,7 @@ class HruController {
           'id', gh.id,
           'time_id', time_id,
           'type', 'Feature',
-          'geometry', ST_AsGeoJSON(gh.geom)::json,
+          'geometry', ST_AsGeoJson(gh.geom)::json,
           'properties', json_build_object(
             'id', h.id,
             'rain', rain,
@@ -91,7 +91,7 @@ class HruController {
         'id', gh.id,
         'time_id', time_id,
         'type', 'Feature',
-        'geometry', ST_AsGeoJSON(gh.geom)::json,
+        'geometry', ST_AsGeoJson(gh.geom)::json,
         'properties', json_build_object(
           'id', h.id,
           'rain', rain,
@@ -127,7 +127,7 @@ class HruController {
         'id', gh.id,
         'time_id', time_id,
         'type', 'Feature',
-        'geometry', ST_AsGeoJSON(gh.geom)::json,
+        'geometry', ST_AsGeoJson(gh.geom)::json,
         'properties', json_build_object(
           'id', h.id,
           'rain', rain,
