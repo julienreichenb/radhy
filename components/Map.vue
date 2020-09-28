@@ -314,9 +314,9 @@ export default {
         '%</p>'
       )
     },
-  },
-  zoomUpdated(zoom) {
-    this.currentZoom = zoom
+    zoomUpdated(zoom) {
+      this.currentZoom = zoom
+    },
   },
 }
 </script>
