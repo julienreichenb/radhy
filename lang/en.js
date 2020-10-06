@@ -51,6 +51,8 @@ export default {
   go_to_dashboard: 'Go to Dashboard',
   go_to_about: 'More about RADHY',
   dashboard: {
+    picker: 'Select the date',
+    error: 'No data available at this date.',
     hru: {
       title: 'Shaping the Basin in Areas',
       text:

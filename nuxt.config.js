@@ -35,7 +35,7 @@ export default {
   /*
    ** Global CSS
    */
-  css: ['@fortawesome/fontawesome-svg-core/styles.css'],
+  css: ['@fortawesome/fontawesome-svg-core/styles.css', 'assets/global.css'],
 
   styleResources: {
     scss: ['assets/_variables.scss'],
@@ -48,6 +48,7 @@ export default {
     '~/plugins/fontawesome.js',
     '~/plugins/googlechart.js',
     '~/plugins/bootstrap-slider.js',
+    { src: '~/plugins/datepicker', mode: 'client' },
   ],
   /*
    ** Auto import components

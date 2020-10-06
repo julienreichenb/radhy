@@ -51,6 +51,8 @@ export default {
   go_to_dashboard: 'Accéder au Dashboard',
   go_to_about: "Plus d'infos sur RADHY",
   dashboard: {
+    picker: 'Sélectionnez la date',
+    error: 'Aucune donnée disponible à cette date.',
     hru: {
       title: 'Découpage du bassin versant en zones',
       text:

@@ -2,7 +2,11 @@
   <div>
     <client-only v-if="geo">
       <l-map ref="map" :zoom="zoom" :center="center" @update:zoom="zoomUpdated">
-        <l-control class="options-control" position="bottomleft">
+        <l-control
+          v-if="displayHrus"
+          class="options-control"
+          position="bottomleft"
+        >
           <b-row>
             <b-col v-for="option in show" :key="option.key" md="6">
               <b-form-checkbox
@@ -88,23 +92,25 @@
           </b-button>
         </l-control>
         <l-tile-layer :url="url" :attribution="attribution" />
-        <l-geo-json
-          v-if="show[2].active"
-          :geojson="geo.hru"
-          :options-style="styleOptionsRain"
-        ></l-geo-json>
-        <l-geo-json
-          v-if="show[1].active"
-          :geojson="geo.hru"
-          :options="optionsHruStored"
-          :options-style="styleOptionsHruStored"
-        ></l-geo-json>
-        <l-geo-json
-          v-if="show[3].active"
-          :geojson="geo.reach"
-          :options="optionsReach"
-          :options-style="styleOptionsReach"
-        ></l-geo-json>
+        <div v-if="displayHrus">
+          <l-geo-json
+            v-if="show[2].active"
+            :geojson="geo.hru"
+            :options-style="styleOptionsRain"
+          ></l-geo-json>
+          <l-geo-json
+            v-if="show[1].active"
+            :geojson="geo.hru"
+            :options="optionsHruStored"
+            :options-style="styleOptionsHruStored"
+          ></l-geo-json>
+          <l-geo-json
+            v-if="show[3].active"
+            :geojson="geo.reach"
+            :options="optionsReach"
+            :options-style="styleOptionsReach"
+          ></l-geo-json>
+        </div>
       </l-map>
     </client-only>
     <b-modal
@@ -165,6 +171,9 @@ export default {
     }
   },
   computed: {
+    displayHrus() {
+      return this.currentZoom < 14
+    },
     optionsHruStored() {
       return {
         onEachFeature: this.optionFunctionHruStored,
@@ -363,5 +372,10 @@ export default {
   padding: 5px;
   margin: 5px;
   z-index: 104000;
+}
+
+// Fixing Google Chart Tooltip bug
+svg > g > g:last-child {
+  pointer-events: none;
 }
 </style>

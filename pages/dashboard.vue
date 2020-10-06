@@ -1,20 +1,55 @@
 <template>
   <div id="dashboard">
-    <b-form-slider
-      v-if="timeRange"
-      id="time-slider"
-      :min="timeRange[0].id"
-      :max="timeRange[timeRange.length - 1].id"
-      :value="selectedTime && selectedTime.id"
-      :ticks="getTimeTicks()"
-      :ticks-labels="getTimeLabels()"
-      :step="timeRange[1].id - timeRange[0].id"
-      @change="getData"
-    />
+    <b-row class="mb-3 border-bottom">
+      <b-col sm="12" md="3" lg="2" class="pt-3">
+        <h6>{{ $t('dashboard.picker') }}</h6>
+        <date-picker
+          v-model="datepicker.value"
+          :clear-option="datepicker.clearOption"
+          :min="datepicker.min"
+          :max="datepicker.max"
+          :date-format="datepicker.dateFormat"
+          @selected="changeTimeRange"
+        />
+      </b-col>
+      <b-col class="pt-3">
+        <b-form-slider
+          v-if="timeRange && timeRange[0] !== undefined"
+          id="time-slider"
+          :handle="'custom'"
+          :min="timeRange && timeRange[0].id"
+          :max="timeRange && timeRange[timeRange.length - 1].id"
+          :value="selectedTime && selectedTime.id"
+          :ticks="getTimeTicks()"
+          :ticks-labels="timeLabels.map((t) => t.labelShort)"
+          :formatter="(index) => timeLabels.find((l) => l.id === index).label"
+          :tooltip="'always'"
+          :tooltip-position="'top'"
+          :step="timeRange && timeRange[1].id - timeRange[0].id"
+          :enabled="selectedTime && selectedTime.loaded"
+          @change="getData"
+        />
+      </b-col>
+    </b-row>
     <b-row id="data" no-gutters>
-      <b-col md="12" lg="4" class="mb-3">
+      <b-col
+        v-if="timeRange"
+        md="12"
+        lg="4"
+        :class="
+          selectedTime && selectedTime.loaded && timeRange[0] !== undefined
+            ? 'mb-3'
+            : 'my-auto'
+        "
+      >
+        <div
+          v-if="timeRange[0] === undefined"
+          class="d-flex justify-content-center"
+        >
+          <h5 class="text-muted">{{ $t('dashboard.error') }}</h5>
+        </div>
         <Map
-          v-if="selectedTime && selectedTime.loaded"
+          v-else-if="selectedTime && selectedTime.loaded"
           id="map"
           :geo="geoJsons"
           :playable="isPlayable"
@@ -82,6 +117,7 @@
 </template>
 <script>
 import Axios from 'axios'
+import moment from 'moment'
 import Loading from '../components/Loading'
 import Map from '../components/Map'
 import axios from '../plugins/axios'
@@ -93,6 +129,14 @@ export default {
   data() {
     return {
       timeRange: null,
+      timeLabels: null,
+      datepicker: {
+        value: null,
+        min: null,
+        max: null,
+        dateFormat: 'MMMM YYYY',
+        clearOption: false,
+      },
       selectedTime: null,
       loaded: false,
       isPlaying: false,
@@ -242,55 +286,59 @@ export default {
     },
     async getOverall() {
       this.hideCharts()
-      const hruOverallQuery = axios.get(
-        `hru/overall/${this.timeRange[0].id}/${
-          this.timeRange[this.timeRange.length - 1].id
-        }`
-      )
-      const reachOverallQuery = axios.get(
-        `reach/overall/${this.timeRange[0].id}/${
-          this.timeRange[this.timeRange.length - 1].id
-        }`
-      )
-      const soilCompositionQuery = axios.get(`gishru/soil`)
-      const reachWidthQuery = axios.get(`gisreach/width`)
-      await Axios.all([
-        hruOverallQuery,
-        reachOverallQuery,
-        soilCompositionQuery,
-        reachWidthQuery,
-      ])
-        .then(
-          Axios.spread(async (...responses) => {
-            await this.setupHeaderCharts()
-            /* Data HRU - OVERALL */
-            responses[0].data.forEach((hru) => {
-              hru.rain += hru.snow
-              delete hru.snow
-              hru.time_id = this.getDayLabel(hru.time_id)
-              this.cards[0].charts[0].data.push(Object.values(hru))
-            })
-            /* Data REACH - OVERALL & WIDTH  */
-            responses[1].data.forEach((reach) => {
-              reach.time_id = this.getDayLabel(reach.time_id)
-              this.cards[1].charts[0].data.push(Object.values(reach))
-            })
-            /* Data HRU - SOIL */
-            Object.entries(responses[2].data[0]).forEach((line) => {
-              line[0] = this.$t('dashboard.chart.' + line[0])
-              line[1] = parseInt(line[1])
-              this.cards[0].charts[1].data.push(line)
-            })
-            /* Data REACH - WIDTH */
-            responses[3].data.forEach((reach) => {
-              this.cards[1].charts[1].data.push([reach.id, reach.width])
-            })
-            this.showCharts()
-          })
+      try {
+        const hruOverallQuery = axios.get(
+          `hru/overall/${this.timeRange[0].id}/${
+            this.timeRange[this.timeRange.length - 1].id
+          }`
         )
-        .catch((err) => {
-          console.log(err)
-        })
+        const reachOverallQuery = axios.get(
+          `reach/overall/${this.timeRange[0].id}/${
+            this.timeRange[this.timeRange.length - 1].id
+          }`
+        )
+        const soilCompositionQuery = axios.get(`gishru/soil`)
+        const reachWidthQuery = axios.get(`gisreach/width`)
+        await Axios.all([
+          hruOverallQuery,
+          reachOverallQuery,
+          soilCompositionQuery,
+          reachWidthQuery,
+        ])
+          .then(
+            Axios.spread(async (...responses) => {
+              await this.setupHeaderCharts()
+              /* Data HRU - OVERALL */
+              responses[0].data.forEach((hru) => {
+                hru.rain += hru.snow
+                delete hru.snow
+                hru.time_id = this.getDayLabel(hru.time_id)
+                this.cards[0].charts[0].data.push(Object.values(hru))
+              })
+              /* Data REACH - OVERALL & WIDTH  */
+              responses[1].data.forEach((reach) => {
+                reach.time_id = this.getDayLabel(reach.time_id)
+                this.cards[1].charts[0].data.push(Object.values(reach))
+              })
+              /* Data HRU - SOIL */
+              Object.entries(responses[2].data[0]).forEach((line) => {
+                line[0] = this.$t('dashboard.chart.' + line[0])
+                line[1] = parseInt(line[1])
+                this.cards[0].charts[1].data.push(line)
+              })
+              /* Data REACH - WIDTH */
+              responses[3].data.forEach((reach) => {
+                this.cards[1].charts[1].data.push([reach.id, reach.width])
+              })
+              this.showCharts()
+            })
+          )
+          .catch((err) => {
+            console.log(err)
+          })
+      } catch (err) {
+        console.log(err)
+      }
     },
     async getAvailableTimeRange() {
       await axios
@@ -299,7 +347,13 @@ export default {
           await axios
             .get(`time/daterange/${resHru.data[0]}/${resHru.data[1]}`)
             .then((res) => {
-              this.timeRange = res.data
+              this.availableTimeRange = res.data
+              const max = this.setPickerOptions()
+              // Initial values
+              this.timeRange = this.availableTimeRange.filter(
+                (d) => d.year === max.year && d.month === max.month
+              )
+              this.getTimeLabels()
             })
             .catch((err) => {
               console.log(err)
@@ -308,6 +362,57 @@ export default {
         .catch((err) => {
           console.log(err)
         })
+    },
+    setPickerOptions() {
+      const maxY = Math.max.apply(
+        Math,
+        this.availableTimeRange.map((o) => {
+          return o.year
+        })
+      )
+      const maxM = Math.max.apply(
+        Math,
+        this.availableTimeRange
+          .filter((d) => d.year === maxY)
+          .map((o) => {
+            return o.month
+          })
+      )
+      this.datepicker.max = moment(maxY + '-' + maxM + '-01').locale(
+        this.$i18n.locale
+      )
+      const minY = Math.min.apply(
+        Math,
+        this.availableTimeRange.map((o) => {
+          return o.year
+        })
+      )
+      const minM = Math.min.apply(
+        Math,
+        this.availableTimeRange
+          .filter((d) => d.year === minY)
+          .map((o) => {
+            return o.month
+          })
+      )
+      this.datepicker.min = moment(minY + '-' + minM + '-01').locale(
+        this.$i18n.locale
+      )
+      this.datepicker.value = this.datepicker.max // Initialize at the last available date
+      return {
+        month: maxM,
+        year: maxY,
+      }
+    },
+    async changeTimeRange(value) {
+      // Set current TimeRange
+      this.timeRange = await this.availableTimeRange.filter(
+        (r) => r.year === value.year() && r.month === value.month() + 1
+      )
+      this.getTimeLabels()
+      // Reload data
+      await this.getOverall()
+      this.getAllData()
     },
     getText(key, isTitle) {
       return isTitle
@@ -333,10 +438,23 @@ export default {
     getTimeLabels() {
       const labels = []
       this.timeRange.forEach((date) => {
-        const label = date.day + '/' + date.month + '/' + date.year
-        labels.push(label)
+        const formattedDate = moment(
+          date.year + '-' + date.month + '-' + date.day
+        )
+          .locale(this.$i18n.locale)
+          .format('Do MMMM YYYY')
+        const formattedShort = moment(
+          date.year + '-' + date.month + '-' + date.day
+        )
+          .locale(this.$i18n.locale)
+          .format('D MMM YY')
+        labels.push({
+          id: date.id,
+          label: formattedDate,
+          labelShort: formattedShort,
+        })
       })
-      return labels
+      this.timeLabels = labels
     },
     setupHeaderCharts() {
       /* HRU - OVERALL */
@@ -429,11 +547,7 @@ export default {
 #dashboard {
   margin: 0 1em;
 }
-#time-slider {
-  width: 100%;
-  margin: 1em 0 2em 0;
-  padding: 0 5em;
-}
+
 #charts {
   margin-bottom: 2em;
 }
@@ -453,14 +567,100 @@ export default {
   box-shadow: none;
   padding: 0;
 }
-.slider.slider-horizontal {
-  width: 100% !important;
+
+#time-slider {
+  width: 100%;
+  margin: 1.5em 0 2em 0;
+  padding: 0 2.8em 0 2.5em;
+
+  @media (max-width: 768px) {
+    padding: 0 1em 0 1em;
+  }
+
+  .slider.slider-horizontal {
+    width: 100% !important;
+  }
+
+  .tooltip.in {
+    opacity: 1;
+    font-size: 1em;
+
+    @media (max-width: 768px) {
+      font-size: 0.7em;
+    }
+  }
+
+  .tooltip-inner {
+    background: $basecolor-dark !important;
+  }
+
+  .slider-selection {
+    background: transparent;
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: none;
+  }
+
+  .slider-tick.in-selection {
+    background: transparent !important;
+    color: $basecolor !important;
+  }
+
+  .slider-handle.custom::before {
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900 !important;
+    content: '\f783';
+    line-height: 20px;
+    font-size: 20px;
+    color: $basecolor-dark;
+    padding: 4px;
+    background: white;
+    z-index: 50;
+    border-radius: 100px;
+    border: 1px solid $basecolor-light;
+  }
+
+  .slider-tick.custom::before {
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900 !important;
+    content: '\f783';
+    padding: 4px;
+    line-height: 20px;
+    font-size: 20px;
+    color: $basecolor;
+  }
+
+  .slider-tick-label {
+    font-size: 0.7em;
+    opacity: 0;
+
+    @media (min-width: 1200px) {
+      &:nth-child(odd) {
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 1200px) {
+      &:nth-child(3n + 1) {
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      &:nth-child(4n + 1) {
+        opacity: 1;
+      }
+    }
+  }
 }
-.slider-tick {
-  background-image: linear-gradient(
-    to bottom,
-    $basecolor-light 0%,
-    $basecolor 100%
-  );
+
+.vue-monthly-picker {
+  .date-popover {
+    z-index: 90000 !important;
+  }
+
+  .item.active {
+    font-weight: bold;
+  }
 }
 </style>

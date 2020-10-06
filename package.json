@@ -39,6 +39,7 @@
     "sequelize-cli": "^6.2.0",
     "vue-bootstrap-slider": "^2.1.8",
     "vue-google-charts": "^0.3.3",
+    "vue-monthly-picker": "^0.2.8",
     "vue-nonreactive": "^0.1.0"
   },
   "devDependencies": {

@@ -25,6 +25,9 @@ class TimeController {
     const time = await Time.query()
       .whereBetween('id', [params.min, params.max])
       .andWhere('hour', 0)
+      .orderBy('year')
+      .orderBy('month')
+      .orderBy('day')
       .fetch()
     return time.toJSON()
   }
