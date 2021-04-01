@@ -10044,10 +10044,20 @@ vue-meta@^2.4.0:
   dependencies:
     deepmerge "^4.2.2"
 
+vue-monthly-picker@^0.2.8:
+  version "0.2.8"
+  resolved "https://registry.yarnpkg.com/vue-monthly-picker/-/vue-monthly-picker-0.2.8.tgz#9a3bb3e5d7554604c35e983df84c7314e974be66"
+  integrity sha512-E0gM3+NDqKIkUyVH9JnRRk5TdjoGfEVryXqQUP9+zJwppFQpukAG0+p5WpJRpB6w1iArzQp8P698/tNG2kmDEQ==
+
 vue-no-ssr@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/vue-no-ssr/-/vue-no-ssr-1.1.1.tgz#875f3be6fb0ae41568a837f3ac1a80eaa137b998"
   integrity sha512-ZMjqRpWabMPqPc7gIrG0Nw6vRf1+itwf0Itft7LbMXs2g3Zs/NFmevjZGN1x7K3Q95GmIjWbQZTVerxiBxI+0g==
+
+vue-nonreactive@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/vue-nonreactive/-/vue-nonreactive-0.1.0.tgz#c2f85b0a3cc32a6e5233de2e540b5d540d0b8849"
+  integrity sha1-wvhbCjzDKm5SM94uVAtdVA0LiEk=
 
 vue-router@^3.3.4:
   version "3.3.4"
@@ -10389,9 +10399,9 @@ xxhashjs@^0.2.1:
     cuint "^0.2.2"
 
 y18n@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/y18n/-/y18n-4.0.0.tgz#95ef94f85ecc81d007c264e190a120f0a3c8566b"
-  integrity sha512-r9S/ZyXu/Xu9q1tYlpsLIsa3EeLXXk0VwlxqTcFRfg9EhMW+17kbt9G0NrgCmhGb5vT2hyhJZLfDGx+7+5Uj/w==
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/y18n/-/y18n-4.0.1.tgz#8db2b83c31c5d75099bb890b23f3094891e247d4"
+  integrity sha512-wNcy4NvjMYL8gogWWYAO7ZFWFfHcbdbE57tZO8e4cbpj8tfUcwrwqSl3ad8HxpYWCdXcJUCeKKZS62Av1affwQ==
 
 yallist@^2.1.2:
   version "2.1.2"
