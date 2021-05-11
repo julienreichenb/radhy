@@ -5952,9 +5952,9 @@ lodash.zip@^4.2.0:
   integrity sha1-7GZi5IlkCO1KtsVCo5kLcswIACA=
 
 lodash@^4.0.0, lodash@^4.15.0, lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.5, lodash@~4.17.10:
-  version "4.17.19"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
-  integrity sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
+  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
 long@^4.0.0:
   version "4.0.0"
@@ -10044,10 +10044,20 @@ vue-meta@^2.4.0:
   dependencies:
     deepmerge "^4.2.2"
 
+vue-monthly-picker@^0.2.8:
+  version "0.2.8"
+  resolved "https://registry.yarnpkg.com/vue-monthly-picker/-/vue-monthly-picker-0.2.8.tgz#9a3bb3e5d7554604c35e983df84c7314e974be66"
+  integrity sha512-E0gM3+NDqKIkUyVH9JnRRk5TdjoGfEVryXqQUP9+zJwppFQpukAG0+p5WpJRpB6w1iArzQp8P698/tNG2kmDEQ==
+
 vue-no-ssr@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/vue-no-ssr/-/vue-no-ssr-1.1.1.tgz#875f3be6fb0ae41568a837f3ac1a80eaa137b998"
   integrity sha512-ZMjqRpWabMPqPc7gIrG0Nw6vRf1+itwf0Itft7LbMXs2g3Zs/NFmevjZGN1x7K3Q95GmIjWbQZTVerxiBxI+0g==
+
+vue-nonreactive@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/vue-nonreactive/-/vue-nonreactive-0.1.0.tgz#c2f85b0a3cc32a6e5233de2e540b5d540d0b8849"
+  integrity sha1-wvhbCjzDKm5SM94uVAtdVA0LiEk=
 
 vue-router@^3.3.4:
   version "3.3.4"
