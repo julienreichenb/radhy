@@ -110,6 +110,11 @@
             :options="optionsReach"
             :options-style="styleOptionsReach"
           ></l-geo-json>
+          <l-image-overlay
+            v-if="show[4].active"
+            :url="overlay.url"
+            :bounds="overlay.bounds"
+          ></l-image-overlay>
         </div>
       </l-map>
     </client-only>
@@ -130,8 +135,8 @@
       placement="bottomleft"
       >{{ $t('dashboard.map.tooltip.recenter') }}</b-tooltip
     >
-  </div></template
->
+  </div>
+</template>
 <script>
 export default {
   props: {
@@ -167,7 +172,15 @@ export default {
         { key: 'stored', active: true },
         { key: 'rain', active: false },
         { key: 'reach', active: true },
+        { key: 'map_jc', active: false },
       ],
+      overlay: {
+        url: `${require(`../static/geotiff/image_jc_clean.png`)}`,
+        bounds: [
+          [44.1206, 6.0699],
+          [44.7559, 5.4608],
+        ],
+      },
     }
   },
   computed: {

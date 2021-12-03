@@ -124,6 +124,7 @@ export default {
         stored: 'Underground',
         rain: 'Rainfall',
         reach: 'Watercourses',
+        map_jc: 'Dangers areas',
       },
     },
   },
