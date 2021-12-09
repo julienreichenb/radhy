@@ -9,13 +9,26 @@
         >
           <b-row>
             <b-col v-for="option in show" :key="option.key" md="6">
-              <b-form-checkbox
-                :id="option.key"
-                v-model="option.active"
-                :name="option.key"
-              >
-                <span>{{ $t('dashboard.map.options.' + option.key) }}</span>
-              </b-form-checkbox>
+              <b-row>
+                <b-col sm="6">
+                  <b-form-checkbox
+                    :id="option.key"
+                    v-model="option.active"
+                    :name="option.key"
+                  >
+                    <span>{{ $t('dashboard.map.options.' + option.key) }}</span>
+                  </b-form-checkbox>
+                </b-col>
+                <b-col sm="6" v-if="option.slider">
+                  <b-form-input
+                    v-model="option.opacity"
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.1"
+                  />
+                </b-col>
+              </b-row>
             </b-col>
           </b-row>
         </l-control>
@@ -96,20 +109,29 @@
           <l-geo-json
             v-if="show[2].active"
             :geojson="geo.hru"
+            :key="show[2].opacity"
             :options-style="styleOptionsRain"
           ></l-geo-json>
           <l-geo-json
             v-if="show[1].active"
+            :key="show[1].opacity"
             :geojson="geo.hru"
             :options="optionsHruStored"
             :options-style="styleOptionsHruStored"
           ></l-geo-json>
           <l-geo-json
             v-if="show[3].active"
+            :key="show[3].opacity"
             :geojson="geo.reach"
             :options="optionsReach"
             :options-style="styleOptionsReach"
           ></l-geo-json>
+          <l-image-overlay
+            v-if="show[4].active"
+            :url="overlay.url"
+            :bounds="overlay.bounds"
+            :opacity="show[4].opacity"
+          ></l-image-overlay>
         </div>
       </l-map>
     </client-only>
@@ -130,8 +152,8 @@
       placement="bottomleft"
       >{{ $t('dashboard.map.tooltip.recenter') }}</b-tooltip
     >
-  </div></template
->
+  </div>
+</template>
 <script>
 export default {
   props: {
@@ -163,11 +185,21 @@ export default {
         {
           key: 'tooltip',
           active: false,
+          slider: false,
+          opacity: 1,
         },
-        { key: 'stored', active: true },
-        { key: 'rain', active: false },
-        { key: 'reach', active: true },
+        { key: 'stored', active: true, slider: true, opacity: 1 },
+        { key: 'rain', active: false, slider: true, opacity: 0.3 },
+        { key: 'reach', active: true, slider: false, opacity: 0.8 },
+        { key: 'map_jc', active: false, slider: true, opacity: 1 },
       ],
+      overlay: {
+        url: `${require(`../static/geotiff/image_jc_clean.png`)}`,
+        bounds: [
+          [44.1206, 6.0699],
+          [44.7559, 5.4608],
+        ],
+      },
     }
   },
   computed: {
@@ -189,8 +221,8 @@ export default {
         return {
           color: 'transparent',
           fillColor: this.hruGradient[feature.option.fillcolor],
-          opacity: 0.8,
-          fillOpacity: 1,
+          opacity: this.show[1].opacity,
+          fillOpacity: this.show[1].opacity,
           weight: 0.5,
         }
       }
@@ -200,7 +232,7 @@ export default {
         return {
           color: '#668dcc',
           weight: feature.option.weight,
-          opacity: 0.3,
+          opacity: this.show[2].opacity,
           fillOpacity: 0,
         }
       }
@@ -210,7 +242,7 @@ export default {
         return {
           color: `rgba(0, 166, 255, ${feature.option.color})`,
           weight: feature.option.weight * 1.2,
-          opacity: 1,
+          opacity: this.show[1].opacity,
         }
       }
     },
@@ -377,5 +409,40 @@ export default {
 // Fixing Google Chart Tooltip bug
 svg > g > g:last-child {
   pointer-events: none;
+}
+input[type='range']:focus {
+  outline: none;
+}
+input[type='range']::-webkit-slider-runnable-track {
+  background: rgba(0, 166, 255, 0.2);
+  width: 100%;
+  cursor: pointer;
+}
+input[type='range']:focus::-webkit-slider-runnable-track {
+  background: rgba(0, 166, 255, 0.2);
+}
+input[type='range']::-moz-range-track {
+  background: rgba(0, 166, 255, 0.2);
+  width: 100%;
+  cursor: pointer;
+}
+input[type='range']::-ms-track {
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+  width: 100%;
+  cursor: pointer;
+}
+input[type='range']::-ms-fill-lower {
+  background: rgba(0, 166, 255, 0.2);
+}
+input[type='range']::-ms-fill-upper {
+  background: rgba(0, 166, 255, 0.2);
+}
+input[type='range']:focus::-ms-fill-lower {
+  background: rgba(0, 166, 255, 0.2);
+}
+input[type='range']:focus::-ms-fill-upper {
+  background: rgba(0, 166, 255, 0.2);
 }
 </style>

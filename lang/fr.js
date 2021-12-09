@@ -124,6 +124,7 @@ export default {
         stored: 'Sous-sol',
         rain: 'Précipitations',
         reach: "Cours d'eau",
+        map_jc: 'Zones de dangers',
       },
     },
   },
