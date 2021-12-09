@@ -286,6 +286,7 @@ export default {
     },
     async getOverall() {
       this.hideCharts()
+      console.log(this.timeRange)
       try {
         const hruOverallQuery = axios.get(
           `hru/overall/${this.timeRange[0].id}/${
@@ -347,6 +348,7 @@ export default {
           await axios
             .get(`time/daterange/${resHru.data[0]}/${resHru.data[1]}`)
             .then((res) => {
+              console.log(res)
               this.availableTimeRange = res.data
               const max = this.setPickerOptions()
               // Initial values

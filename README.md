@@ -3,7 +3,10 @@
 ## Build Setup
 
 ```bash
-# install dependencies
+# if needed, install adonis
+npm i --global @adonisjs/cli
+
+# install dependencies in base project as well as in the rahdy-server folder
 $ yarn install
 $ npm install
 
