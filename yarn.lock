@@ -1512,14 +1512,6 @@
   optionalDependencies:
     prettier "^1.18.2"
 
-"@vueform/slider@^2.0.7":
-  version "2.0.7"
-  resolved "https://registry.yarnpkg.com/@vueform/slider/-/slider-2.0.7.tgz#d0003663363e1ee841d6f9552f86229382442a26"
-  integrity sha512-2/IxxkNpVu1iuYsmdA98sJcHO9CrxeXbMG1HonYcWTBjV15jh+WwdbZfE5wGBnGWJxp8u/7Pv4L6y4maY36bGQ==
-  dependencies:
-    nouislider "^15.4.0"
-    wnumb "^1.2.0"
-
 "@webassemblyjs/ast@1.9.0":
   version "1.9.0"
   resolved "https://registry.npmjs.org/@webassemblyjs/ast/-/ast-1.9.0.tgz"
@@ -6472,9 +6464,11 @@ no-case@^3.0.3:
     tslib "^1.10.0"
 
 node-fetch@^2.6.0:
-  version "2.6.0"
-  resolved "https://registry.npmjs.org/node-fetch/-/node-fetch-2.6.0.tgz"
-  integrity sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==
+  version "2.6.7"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.7.tgz#24de9fba827e3b4ae44dc8b20256a379160052ad"
+  integrity sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==
+  dependencies:
+    whatwg-url "^5.0.0"
 
 node-gyp@^3.8.0:
   version "3.8.0"
@@ -6630,11 +6624,6 @@ normalize-url@^3.0.0, normalize-url@^3.3.0:
   version "3.3.0"
   resolved "https://registry.npmjs.org/normalize-url/-/normalize-url-3.3.0.tgz"
   integrity sha512-U+JJi7duF1o+u2pynbp2zXDW2/PADgC30f0GsHZtRh+HOcXHnw137TrNlyxxRvWW5fjKd3bcLHPxofWuCjaeZg==
-
-nouislider@^15.4.0:
-  version "15.5.0"
-  resolved "https://registry.yarnpkg.com/nouislider/-/nouislider-15.5.0.tgz#2adc143de400e3ae191ca291f0df24c519a15b5b"
-  integrity sha512-p0Rn0a4XzrBJ+JZRhNDYpRYr6sDPkajsjbvEQoTp/AZlNI3NirO15s1t11D25Gk3zVyvNJAzc1DO48cq/KX5Sw==
 
 npm-publish-git-tag@^3.0.3:
   version "3.0.4"
@@ -9606,6 +9595,11 @@ tough-cookie@~2.5.0:
     psl "^1.1.28"
     punycode "^2.1.1"
 
+tr46@~0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
+  integrity sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==
+
 trim-newlines@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/trim-newlines/-/trim-newlines-1.0.0.tgz"
@@ -10124,6 +10118,11 @@ watchpack@^1.6.1:
     chokidar "^3.4.0"
     watchpack-chokidar2 "^2.0.0"
 
+webidl-conversions@^3.0.0:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-3.0.1.tgz#24534275e2a7bc6be7bc86611cc16ae0a5654871"
+  integrity sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==
+
 webpack-bundle-analyzer@^3.8.0:
   version "3.8.0"
   resolved "https://registry.npmjs.org/webpack-bundle-analyzer/-/webpack-bundle-analyzer-3.8.0.tgz"
@@ -10241,6 +10240,14 @@ webpackbar@^4.0.0:
     text-table "^0.2.0"
     wrap-ansi "^6.0.0"
 
+whatwg-url@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/whatwg-url/-/whatwg-url-5.0.0.tgz#966454e8765462e37644d3626f6742ce8b70965d"
+  integrity sha512-saE57nupxk6v3HY35+jzBwYa0rKSy0XR8JSxZPwgLr7ys0IBzhGviA1/TUGJLmSVqs8pb9AnvICXEuOHLprYTw==
+  dependencies:
+    tr46 "~0.0.3"
+    webidl-conversions "^3.0.0"
+
 which-module@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/which-module/-/which-module-2.0.0.tgz"
@@ -10292,11 +10299,6 @@ wkx@^0.5.0:
   integrity sha512-Xng/d4Ichh8uN4l0FToV/258EjMGU9MGcA0HV2d9B/ZpZB3lqQm7nkOdZdm5GhKtLLhAE7PiVQwN4eN+2YJJUg==
   dependencies:
     "@types/node" "*"
-
-wnumb@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/wnumb/-/wnumb-1.2.0.tgz#f6fa5bfa739b9ca3b1e472094e1feeeb189484d9"
-  integrity sha512-eYut5K/dW7usfk/Mwm6nxBNoTPp/uP7PlXld+hhg7lDtHLdHFnNclywGYM9BRC7Ohd4JhwuHg+vmOUGfd3NhVA==
 
 word-wrap@^1.2.3:
   version "1.2.3"
